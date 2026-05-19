@@ -962,6 +962,166 @@
       .cat-tab { padding: 6px 14px; font-size: 12px; }
       .gamify-bar { gap: 18px; }
       .pp-cta { flex-direction: column; }
+      .reveal-stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Portfolio Reveal Styles */
+    .reveal-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .reveal-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 6px;
+    }
+    .reveal-subtitle {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      max-width: 460px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+    .reveal-portfolio-card {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+    .reveal-portfolio-card.reveal-selected {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 1px var(--color-accent);
+    }
+    .reveal-portfolio-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .reveal-portfolio-name {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .reveal-stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .reveal-stat {
+      text-align: center;
+      padding: 12px 8px;
+      background: var(--color-surface-alt);
+      border-radius: var(--radius-md);
+    }
+    .reveal-stat-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+    .reveal-stat-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    .reveal-alloc-bar {
+      display: flex;
+      height: 8px;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-bottom: 20px;
+      gap: 2px;
+    }
+    .reveal-alloc-bonds {
+      height: 100%;
+      background: #60a5fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 600;
+      color: #fff;
+      min-width: 40px;
+      border-radius: var(--radius-full);
+    }
+    .reveal-alloc-etfs {
+      height: 100%;
+      background: #34d399;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 600;
+      color: #fff;
+      min-width: 40px;
+      border-radius: var(--radius-full);
+    }
+    .reveal-alloc-stocks {
+      height: 100%;
+      background: var(--color-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 600;
+      color: #fff;
+      min-width: 40px;
+      border-radius: var(--radius-full);
+    }
+    .reveal-holding-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      background: var(--color-surface-alt);
+      margin-bottom: 4px;
+    }
+    .reveal-holding-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .reveal-holding-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    .reveal-holding-ticker {
+      font-size: 11px;
+      color: var(--color-text-tertiary);
+    }
+    .reveal-holding-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .reveal-holding-alloc {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      min-width: 45px;
+      text-align: right;
+    }
+    .reveal-holding-dollar {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      min-width: 55px;
+      text-align: right;
+    }
+    .reveal-holding-ret {
+      font-size: 12px;
+      font-weight: 500;
+      min-width: 50px;
+      text-align: right;
     }
   </style>
 </head>
@@ -1204,31 +1364,35 @@
 
   <!-- Step 9: Sign Up CTA Page -->
   <div class="page" id="page-summary">
-    <div class="survey-head">
-      <div class="survey-label">Step 9 of 9</div>
-      <div class="survey-title">Your portfolio is ready!</div>
-      <div class="survey-sub">Sign up now to receive your full portfolio summary, including in-depth details about your selected stocks, projected performance, and personalized investment insights.</div>
-    </div>
+    <div id="summary-cta">
+      <div class="survey-head">
+        <div class="survey-label">Step 9 of 9</div>
+        <div class="survey-title">Your portfolio is ready!</div>
+        <div class="survey-sub">Sign up now to see your full portfolio breakdown, including bonds, ETFs, and individual stock allocations with projected performance.</div>
+      </div>
 
-    <div style="text-align: center; padding: 30px 0;">
-      <div style="background: var(--color-surface-alt); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 24px; max-width: 400px; margin: 0 auto 24px; text-align: left;">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
-          <i class="ti ti-mail" style="font-size: 22px; color: var(--color-accent);"></i>
-          <span style="font-size: 14px; font-weight: 600;">What you'll get:</span>
+      <div style="text-align: center; padding: 30px 0;">
+        <div style="background: var(--color-surface-alt); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 24px; max-width: 400px; margin: 0 auto 24px; text-align: left;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+            <i class="ti ti-mail" style="font-size: 22px; color: var(--color-accent);"></i>
+            <span style="font-size: 14px; font-weight: 600;">What you'll unlock:</span>
+          </div>
+          <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.8;">
+            <div><i class="ti ti-check" style="color: var(--color-green); margin-right: 6px;"></i>Full portfolio breakdown (bonds, ETFs, stocks)</div>
+            <div><i class="ti ti-check" style="color: var(--color-green); margin-right: 6px;"></i>Allocation percentages and dollar amounts</div>
+            <div><i class="ti ti-check" style="color: var(--color-green); margin-right: 6px;"></i>Projected returns based on actual holdings</div>
+            <div><i class="ti ti-check" style="color: var(--color-green); margin-right: 6px;"></i>Industry insights from your stock picks</div>
+          </div>
         </div>
-        <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.8;">
-          <div><i class="ti ti-check" style="color: var(--color-green); margin-right: 6px;"></i>Full portfolio breakdown with your stocks</div>
-          <div><i class="ti ti-check" style="color: var(--color-green); margin-right: 6px;"></i>Projected performance analysis</div>
-          <div><i class="ti ti-check" style="color: var(--color-green); margin-right: 6px;"></i>Risk level explanation</div>
-          <div><i class="ti ti-check" style="color: var(--color-green); margin-right: 6px;"></i>Personalized next steps</div>
-        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn-back" id="btn-back-summary">Go Back</button>
+        <button class="btn-next" id="btn-next-summary">Sign Up Now</button>
       </div>
     </div>
 
-    <div class="nav-buttons">
-      <button class="btn-back" id="btn-back-summary">Go Back</button>
-      <button class="btn-next" id="btn-next-summary">Sign Up to Receive Summary</button>
-    </div>
+    <div id="summary-content" style="display: none;"></div>
   </div>
 
 </div>
@@ -1332,6 +1496,117 @@ let searchQuery = '';
 let investmentBudget = null;
 let investmentTimeline = null;
 let riskTolerance = null;
+
+// Inferred industries from stock picks and generated portfolio data
+let inferredIndustries = [];
+let generatedPortfolios = {};
+
+// General bond and ETF investments (always available)
+const GENERAL_INVESTMENTS = {
+  bonds: [
+    { name: 'Vanguard Total Bond Market', ticker: 'BND', emoji: '📜', ret: 3.5, type: 'bond' },
+    { name: 'iShares Core US Aggregate Bond', ticker: 'AGG', emoji: '📜', ret: 3.2, type: 'bond' },
+    { name: 'Vanguard Short-Term Treasury', ticker: 'VGSH', emoji: '📜', ret: 2.8, type: 'bond' },
+  ],
+  etfs: [
+    { name: 'Vanguard S&P 500 ETF', ticker: 'VOO', emoji: '📈', ret: 10.5, type: 'etf' },
+    { name: 'Vanguard Total Stock Market', ticker: 'VTI', emoji: '📊', ret: 10.2, type: 'etf' },
+  ]
+};
+
+// Industry-specific ETFs and bond funds
+const INDUSTRY_INVESTMENTS = {
+  tech: {
+    etfs: [
+      { name: 'Invesco QQQ Trust', ticker: 'QQQ', emoji: '📊', ret: 14.2, type: 'etf' },
+      { name: 'Vanguard Information Tech', ticker: 'VGT', emoji: '💻', ret: 13.8, type: 'etf' },
+    ],
+    bonds: [
+      { name: 'iShares Investment Grade Corp Bond', ticker: 'LQD', emoji: '📜', ret: 4.1, type: 'bond' },
+    ]
+  },
+  healthcare: {
+    etfs: [
+      { name: 'Health Care Select SPDR', ticker: 'XLV', emoji: '🏥', ret: 9.2, type: 'etf' },
+      { name: 'Vanguard Health Care ETF', ticker: 'VHT', emoji: '💊', ret: 8.8, type: 'etf' },
+    ],
+    bonds: [
+      { name: 'iShares US Healthcare Bond', ticker: 'IBB', emoji: '📜', ret: 3.8, type: 'bond' },
+    ]
+  },
+  finance: {
+    etfs: [
+      { name: 'Financial Select SPDR', ticker: 'XLF', emoji: '🏦', ret: 11.5, type: 'etf' },
+      { name: 'Vanguard Financials ETF', ticker: 'VFH', emoji: '💳', ret: 10.9, type: 'etf' },
+    ],
+    bonds: [
+      { name: 'iShares Financials Bond', ticker: 'FIBR', emoji: '📜', ret: 3.9, type: 'bond' },
+    ]
+  },
+  consumer: {
+    etfs: [
+      { name: 'Consumer Staples SPDR', ticker: 'XLP', emoji: '🛒', ret: 7.8, type: 'etf' },
+      { name: 'Vanguard Consumer Staples', ticker: 'VDC', emoji: '🏪', ret: 7.5, type: 'etf' },
+    ],
+    bonds: [
+      { name: 'iShares Consumer Bond', ticker: 'IGIB', emoji: '📜', ret: 3.6, type: 'bond' },
+    ]
+  },
+  energy: {
+    etfs: [
+      { name: 'Energy Select SPDR', ticker: 'XLE', emoji: '⚡', ret: 8.4, type: 'etf' },
+      { name: 'Vanguard Energy ETF', ticker: 'VDE', emoji: '🛢️', ret: 7.9, type: 'etf' },
+    ],
+    bonds: [
+      { name: 'iShares Energy Bond Fund', ticker: 'HYG', emoji: '📜', ret: 4.5, type: 'bond' },
+    ]
+  },
+  ev: {
+    etfs: [
+      { name: 'iShares Self-Driving EV ETF', ticker: 'IDRV', emoji: '🚗', ret: 12.1, type: 'etf' },
+      { name: 'Global X Lithium & Battery', ticker: 'LIT', emoji: '🔋', ret: 10.8, type: 'etf' },
+    ],
+    bonds: [
+      { name: 'iShares ESG Bond ETF', ticker: 'SUSB', emoji: '📜', ret: 3.4, type: 'bond' },
+    ]
+  },
+  entertainment: {
+    etfs: [
+      { name: 'Communication Services SPDR', ticker: 'XLC', emoji: '🎬', ret: 8.6, type: 'etf' },
+      { name: 'Invesco Dynamic Media', ticker: 'PBS', emoji: '📺', ret: 7.2, type: 'etf' },
+    ],
+    bonds: [
+      { name: 'Vanguard Total Bond', ticker: 'BND', emoji: '📜', ret: 3.5, type: 'bond' },
+    ]
+  },
+  realestate: {
+    etfs: [
+      { name: 'Vanguard Real Estate ETF', ticker: 'VNQ', emoji: '🏠', ret: 7.4, type: 'etf' },
+      { name: 'Real Estate Select SPDR', ticker: 'XLRE', emoji: '🏢', ret: 6.9, type: 'etf' },
+    ],
+    bonds: [
+      { name: 'iShares Mortgage Bond', ticker: 'MBB', emoji: '📜', ret: 4.2, type: 'bond' },
+    ]
+  },
+  industrial: {
+    etfs: [
+      { name: 'Industrial Select SPDR', ticker: 'XLI', emoji: '🏭', ret: 9.8, type: 'etf' },
+      { name: 'Vanguard Industrials ETF', ticker: 'VIS', emoji: '🔧', ret: 9.3, type: 'etf' },
+    ],
+    bonds: [
+      { name: 'iShares Industrial Bond', ticker: 'IGIB', emoji: '📜', ret: 3.7, type: 'bond' },
+    ]
+  },
+  communication: {
+    etfs: [
+      { name: 'Communication Services SPDR', ticker: 'XLC', emoji: '📡', ret: 7.1, type: 'etf' },
+      { name: 'Vanguard Comm Services ETF', ticker: 'VOX', emoji: '📞', ret: 6.8, type: 'etf' },
+    ],
+    bonds: [
+      { name: 'Vanguard Total Bond', ticker: 'BND', emoji: '📜', ret: 3.5, type: 'bond' },
+    ]
+  }
+};
 
 // Industry selection data with improved descriptions
 const INDUSTRIES = [
@@ -1893,16 +2168,193 @@ function getCompoundingValue(budget, annualReturn, years) {
   return (budget * Math.pow(1 + annualReturn / 100, years)).toFixed(0);
 }
 
+// Detect industries inferred from stock picks (2+ stocks in same unselected industry)
+function detectInferredIndustries() {
+  const picks = selected.map(id => BRANDS.find(b => b.id === id));
+  const sectorCounts = {};
+  picks.forEach(b => {
+    const sector = b.sector;
+    sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
+  });
+
+  // Map stock sector to industry id
+  const sectorToIndustry = {
+    'tech': 'tech',
+    'healthcare': 'healthcare',
+    'finance': 'finance',
+    'consumer': 'consumer',
+    'energy': 'energy',
+    'ev': 'energy',
+    'entertainment': 'entertainment',
+    'realestate': 'realestate',
+    'industrial': 'industrial',
+    'communication': 'communication'
+  };
+
+  inferredIndustries = [];
+  Object.entries(sectorCounts).forEach(([sector, count]) => {
+    const industryId = sectorToIndustry[sector];
+    if (count >= 2 && industryId && !selectedIndustries.includes(industryId)) {
+      inferredIndustries.push(industryId);
+    }
+  });
+
+  return inferredIndustries;
+}
+
+// Get all active industries (user-selected + inferred)
+function getActiveIndustries() {
+  return [...new Set([...selectedIndustries, ...inferredIndustries])];
+}
+
+// Build portfolio holdings for a given risk level
+function buildPortfolioHoldings(riskLevel, budget) {
+  const picks = selected.map(id => BRANDS.find(b => b.id === id));
+  const activeIndustries = getActiveIndustries();
+  const holdings = [];
+
+  // Industry id sub-keys for INDUSTRY_INVESTMENTS lookups
+  // 'energy' industry uses both 'energy' and 'ev' investment data
+  const industryInvestmentKeys = {
+    'tech': ['tech'],
+    'healthcare': ['healthcare'],
+    'finance': ['finance'],
+    'consumer': ['consumer'],
+    'energy': ['energy', 'ev'],
+    'entertainment': ['entertainment'],
+    'realestate': ['realestate'],
+    'industrial': ['industrial'],
+    'communication': ['communication']
+  };
+
+  // Collect industry-specific ETFs and bonds for active industries
+  const industryEtfs = [];
+  const industryBonds = [];
+  activeIndustries.forEach(indId => {
+    const keys = industryInvestmentKeys[indId] || [indId];
+    keys.forEach(key => {
+      const indData = INDUSTRY_INVESTMENTS[key];
+      if (indData) {
+        indData.etfs.forEach(etf => industryEtfs.push(etf));
+        indData.bonds.forEach(bond => industryBonds.push(bond));
+      }
+    });
+  });
+
+  // Add general investments
+  const generalBonds = [...GENERAL_INVESTMENTS.bonds];
+  const generalEtfs = [...GENERAL_INVESTMENTS.etfs];
+
+  // Allocation percentages by risk level
+  let bondPct, etfPct, stockPct;
+  if (riskLevel === 'low') {
+    bondPct = 0.55;
+    etfPct = 0.30;
+    stockPct = 0.15;
+  } else if (riskLevel === 'medium') {
+    bondPct = 0.25;
+    etfPct = 0.30;
+    stockPct = 0.45;
+  } else {
+    bondPct = 0.05;
+    etfPct = 0.15;
+    stockPct = 0.80;
+  }
+
+  // Add bonds - prefer industry-specific, then general (deduplicate by ticker)
+  const seenBondTickers = new Set();
+  const allBonds = [...industryBonds, ...generalBonds].filter(b => {
+    if (seenBondTickers.has(b.ticker)) return false;
+    seenBondTickers.add(b.ticker);
+    return true;
+  });
+  if (allBonds.length > 0) {
+    // Distribute bond allocation across available bonds (max 3)
+    const bondsToUse = allBonds.slice(0, 3);
+    const bondPerItem = bondPct / bondsToUse.length;
+    bondsToUse.forEach(bond => {
+      holdings.push({
+        ...bond,
+        allocation: bondPerItem,
+        dollarAmount: budget * bondPerItem
+      });
+    });
+  }
+
+  // Add ETFs - prefer industry-specific, then general (deduplicate by ticker)
+  const seenEtfTickers = new Set();
+  const allEtfs = [...industryEtfs, ...generalEtfs].filter(e => {
+    if (seenEtfTickers.has(e.ticker)) return false;
+    seenEtfTickers.add(e.ticker);
+    return true;
+  });
+  if (allEtfs.length > 0) {
+    // For low risk, use more ETFs; for high risk, fewer
+    const maxEtfs = riskLevel === 'low' ? 4 : riskLevel === 'medium' ? 3 : 2;
+    const etfsToUse = allEtfs.slice(0, maxEtfs);
+    const etfPerItem = etfPct / etfsToUse.length;
+    etfsToUse.forEach(etf => {
+      holdings.push({
+        ...etf,
+        allocation: etfPerItem,
+        dollarAmount: budget * etfPerItem
+      });
+    });
+  }
+
+  // Add individual stocks from user picks
+  if (picks.length > 0) {
+    // For low risk, only include stocks with positive returns; for high, include all
+    const filteredPicks = riskLevel === 'low'
+      ? picks.filter(p => p.ret > 0)
+      : picks;
+    const stocksToUse = filteredPicks.length > 0 ? filteredPicks : picks;
+    const stockPerItem = stockPct / stocksToUse.length;
+    stocksToUse.forEach(stock => {
+      holdings.push({
+        name: stock.name,
+        ticker: stock.ticker,
+        emoji: stock.emoji,
+        ret: stock.ret,
+        type: 'stock',
+        color: stock.color,
+        allocation: stockPerItem,
+        dollarAmount: budget * stockPerItem
+      });
+    });
+  }
+
+  // Calculate weighted return
+  const totalAllocation = holdings.reduce((s, h) => s + h.allocation, 0);
+  const weightedReturn = holdings.reduce((s, h) => s + (h.allocation * h.ret), 0) / totalAllocation;
+
+  return { holdings, weightedReturn, totalAllocation };
+}
+
 function generatePortfolioOptions() {
+  // Detect inferred industries from stock picks
+  detectInferredIndustries();
+
   const container = document.getElementById('portfolio-options');
   const picks = selected.map(id => BRANDS.find(b => b.id === id));
-  const avgRet = picks.reduce((s, b) => s + b.ret, 0) / picks.length;
   const budget = getBudgetValue();
-  
+  const activeIndustries = getActiveIndustries();
+
+  // Build all three portfolios
+  const lowPortfolio = buildPortfolioHoldings('low', budget);
+  const medPortfolio = buildPortfolioHoldings('medium', budget);
+  const highPortfolio = buildPortfolioHoldings('high', budget);
+
+  // Store for later reveal
+  generatedPortfolios = {
+    low: lowPortfolio,
+    medium: medPortfolio,
+    high: highPortfolio
+  };
+
   // Determine recommended portfolio based on multiple factors
   let recommendedId = 'medium';
-  
-  // Primary: investment goal
+
   if (investmentGoal === 'short-term') {
     recommendedId = 'low';
   } else if (investmentGoal === 'long-term') {
@@ -1914,61 +2366,57 @@ function generatePortfolioOptions() {
   } else if (investmentGoal === 'learning') {
     recommendedId = 'low';
   }
-  
-  // Adjust based on risk tolerance
+
   if (riskTolerance === 'sell') {
-    recommendedId = 'low'; // Risk-averse -> low risk
+    recommendedId = 'low';
   } else if (riskTolerance === 'buy-more' && recommendedId !== 'low') {
-    recommendedId = 'high'; // Risk-tolerant -> bump up
+    recommendedId = 'high';
   }
-  
-  // Adjust based on timeline
+
   if (investmentTimeline === '1-3') {
-    recommendedId = 'low'; // Short timeline -> low risk
+    recommendedId = 'low';
   } else if (investmentTimeline === '10+' && recommendedId === 'medium') {
-    recommendedId = 'high'; // Long timeline can handle high risk
+    recommendedId = 'high';
   }
-  
+
+  // Industry names for display
+  const industryNames = activeIndustries.map(id => INDUSTRIES.find(i => i.id === id)?.name || id);
+
   const portfolios = [
     {
       id: 'low',
       name: 'Low Risk',
       badge: 'Conservative',
       badgeClass: 'po-risk-low',
-      desc: 'Stable growth with minimal volatility. Focus on established companies with consistent returns.',
-      multiplier: 0.7,
+      desc: 'Stable growth with minimal volatility. Mostly bonds and ETFs in your chosen industries.',
       color: '#16a34a',
-      recommended: recommendedId === 'low'
+      recommended: recommendedId === 'low',
+      portfolioData: lowPortfolio
     },
     {
       id: 'medium',
       name: 'Medium Risk',
       badge: 'Balanced',
       badgeClass: 'po-risk-medium',
-      desc: 'Balanced approach with moderate growth potential. Mix of stable and growth stocks.',
-      multiplier: 1.0,
+      desc: 'Balanced approach with bonds, ETFs, and stocks. Moderate growth with managed risk.',
       color: '#d97706',
-      recommended: recommendedId === 'medium'
+      recommended: recommendedId === 'medium',
+      portfolioData: medPortfolio
     },
     {
       id: 'high',
       name: 'High Risk',
       badge: 'Aggressive',
       badgeClass: 'po-risk-high',
-      desc: 'Maximum growth potential with higher volatility. Focus on high-performing stocks.',
-      multiplier: 1.4,
+      desc: 'Maximum growth potential. Heavy stock allocation for higher returns with more volatility.',
       color: '#dc2626',
-      recommended: recommendedId === 'high'
+      recommended: recommendedId === 'high',
+      portfolioData: highPortfolio
     }
   ];
-  
+
   container.innerHTML = '';
   portfolios.forEach(portfolio => {
-    const projectedReturn = avgRet * portfolio.multiplier;
-    const earnings = (budget * projectedReturn / 100).toFixed(2);
-    const totalValue = (budget + parseFloat(earnings)).toFixed(2);
-    const annualReturn = projectedReturn / 100;
-    
     const card = document.createElement('div');
     card.className = 'po-card' + (portfolio.recommended ? ' recommended' : '');
     card.dataset.id = portfolio.id;
@@ -1980,16 +2428,19 @@ function generatePortfolioOptions() {
         </div>
         <div class="po-name">${portfolio.name}</div>
         <div class="po-desc">${portfolio.desc}</div>
-        <div class="po-stocks">Includes: ${picks.map(b => b.ticker).join(', ')}</div>
+        <div class="po-stocks">Industries: ${industryNames.join(', ')}</div>
+        <div class="po-locked-notice" style="margin-top: 8px; font-size: 11px; color: var(--color-text-tertiary); display: flex; align-items: center; gap: 4px;">
+          <i class="ti ti-lock" style="font-size: 13px;"></i> Sign up to see full portfolio details
+        </div>
       </div>
       <div class="po-right">
-        <div class="po-earnings-label">1Y potential with $${budget.toLocaleString()}</div>
-        <div class="po-earnings-value" style="color: ${portfolio.color}">+$${earnings}</div>
-        <div class="po-earnings-ret">Total: $${totalValue}</div>
+        <div class="po-earnings-label">Estimated 1Y return</div>
+        <div class="po-earnings-value" style="color: ${portfolio.color}">+${portfolio.portfolioData.weightedReturn.toFixed(1)}%</div>
+        <div class="po-earnings-ret">${portfolio.portfolioData.holdings.length} holdings</div>
       </div>
       <div class="po-check"><i class="ti ti-check"></i></div>
     `;
-    
+
     card.addEventListener('click', () => selectPortfolio(portfolio.id));
     container.appendChild(card);
   });
@@ -2000,7 +2451,7 @@ function selectPortfolio(id) {
   document.querySelectorAll('.po-card').forEach(card => {
     card.classList.toggle('selected', card.dataset.id === id);
   });
-  
+
   const btnNext = document.getElementById('btn-next-options');
   btnNext.disabled = false;
   btnNext.textContent = 'Continue';
@@ -2017,102 +2468,163 @@ document.getElementById('btn-next-options').addEventListener('click', () => {
   showPage('page-summary');
 });
 
-// Summary page
-function renderSummary() {
-  const container = document.getElementById('summary-content');
-  const picks = selected.map(id => BRANDS.find(b => b.id === id));
+// Render full portfolio details for the reveal
+function renderPortfolioDetails(portfolioId) {
+  const portfolio = generatedPortfolios[portfolioId];
+  if (!portfolio) return '';
+
   const budget = getBudgetValue();
-  const avgRet = picks.reduce((s, b) => s + b.ret, 0) / picks.length;
-  
-  // Get selected portfolio data
-  let portfolioData = {};
-  if (selectedPortfolio === 'low') {
-    portfolioData = { name: 'Low Risk', badge: 'Conservative', multiplier: 0.7, color: '#16a34a' };
-  } else if (selectedPortfolio === 'medium') {
-    portfolioData = { name: 'Medium Risk', badge: 'Balanced', multiplier: 1.0, color: '#d97706' };
-  } else {
-    portfolioData = { name: 'High Risk', badge: 'Aggressive', multiplier: 1.4, color: '#dc2626' };
+  const { holdings, weightedReturn } = portfolio;
+  const earnings = (budget * weightedReturn / 100).toFixed(2);
+  const totalValue = (budget + parseFloat(earnings)).toFixed(2);
+
+  const riskLabels = {
+    low: { name: 'Low Risk', badge: 'Conservative', badgeClass: 'po-risk-low', color: '#16a34a' },
+    medium: { name: 'Medium Risk', badge: 'Balanced', badgeClass: 'po-risk-medium', color: '#d97706' },
+    high: { name: 'High Risk', badge: 'Aggressive', badgeClass: 'po-risk-high', color: '#dc2626' }
+  };
+  const riskInfo = riskLabels[portfolioId];
+  const isSelected = selectedPortfolio === portfolioId;
+
+  // Group holdings by type
+  const bonds = holdings.filter(h => h.type === 'bond');
+  const etfs = holdings.filter(h => h.type === 'etf');
+  const stocks = holdings.filter(h => h.type === 'stock');
+
+  function renderHoldingGroup(title, items, icon) {
+    if (items.length === 0) return '';
+    return `
+      <div style="margin-bottom: 12px;">
+        <div style="font-size: 11px; font-weight: 600; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">
+          <i class="${icon}" style="font-size: 13px;"></i> ${title}
+        </div>
+        ${items.map(h => `
+          <div class="reveal-holding-row">
+            <div class="reveal-holding-left">
+              <span style="font-size: 16px;">${h.emoji}</span>
+              <div>
+                <div class="reveal-holding-name">${h.name}</div>
+                <div class="reveal-holding-ticker">${h.ticker}</div>
+              </div>
+            </div>
+            <div class="reveal-holding-right">
+              <div class="reveal-holding-alloc">${(h.allocation * 100).toFixed(1)}%</div>
+              <div class="reveal-holding-dollar">$${h.dollarAmount.toFixed(0)}</div>
+              <div class="reveal-holding-ret" style="color: ${h.ret >= 0 ? 'var(--color-green)' : 'var(--color-red)'}">${h.ret >= 0 ? '+' : ''}${h.ret}%</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
   }
-  
-  const projectedReturn = avgRet * portfolioData.multiplier;
-  
-  // Get labels
-  const goalLabel = INVESTMENT_GOALS.find(g => g.id === investmentGoal)?.title || '';
-  const budgetLabel = BUDGET_OPTIONS.find(b => b.id === investmentBudget)?.title || '';
-  const timelineLabel = TIMELINE_OPTIONS.find(t => t.id === investmentTimeline)?.title || '';
-  const riskLabel = RISK_TOLERANCE.find(r => r.id === riskTolerance)?.title || '';
-  const experienceLabel = EXPERIENCE_LEVELS.find(e => e.id === experienceLevel)?.label || '';
-  
-  container.innerHTML = `
+
+  return `
+    <div class="reveal-portfolio-card ${isSelected ? 'reveal-selected' : ''}">
+      <div class="reveal-portfolio-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="po-risk-badge ${riskInfo.badgeClass}">${riskInfo.badge}</span>
+          ${isSelected ? '<span style="padding: 3px 10px; border-radius: var(--radius-full); background: var(--color-accent); color: #fff; font-size: 10px; font-weight: 600;">Your Choice</span>' : ''}
+        </div>
+        <div class="reveal-portfolio-name" style="color: ${riskInfo.color}">${riskInfo.name}</div>
+      </div>
+
+      <div class="reveal-stats-row">
+        <div class="reveal-stat">
+          <div class="reveal-stat-label">1Y Est. Return</div>
+          <div class="reveal-stat-value" style="color: ${riskInfo.color}">+${weightedReturn.toFixed(1)}%</div>
+        </div>
+        <div class="reveal-stat">
+          <div class="reveal-stat-label">1Y Earnings</div>
+          <div class="reveal-stat-value" style="color: var(--color-green)">+$${earnings}</div>
+        </div>
+        <div class="reveal-stat">
+          <div class="reveal-stat-label">1Y Total</div>
+          <div class="reveal-stat-value">$${Number(totalValue).toLocaleString()}</div>
+        </div>
+        <div class="reveal-stat">
+          <div class="reveal-stat-label">5Y Value</div>
+          <div class="reveal-stat-value" style="color: var(--color-green)">$${getCompoundingValue(budget, weightedReturn, 5)}</div>
+        </div>
+      </div>
+
+      <div class="reveal-alloc-bar">
+        ${bonds.length > 0 ? `<div class="reveal-alloc-bonds" style="width: ${(bonds.reduce((s,h) => s + h.allocation, 0) * 100).toFixed(0)}%">Bonds ${(bonds.reduce((s,h) => s + h.allocation, 0) * 100).toFixed(0)}%</div>` : ''}
+        ${etfs.length > 0 ? `<div class="reveal-alloc-etfs" style="width: ${(etfs.reduce((s,h) => s + h.allocation, 0) * 100).toFixed(0)}%">ETFs ${(etfs.reduce((s,h) => s + h.allocation, 0) * 100).toFixed(0)}%</div>` : ''}
+        ${stocks.length > 0 ? `<div class="reveal-alloc-stocks" style="width: ${(stocks.reduce((s,h) => s + h.allocation, 0) * 100).toFixed(0)}%">Stocks ${(stocks.reduce((s,h) => s + h.allocation, 0) * 100).toFixed(0)}%</div>` : ''}
+      </div>
+
+      ${renderHoldingGroup('Bonds', bonds, 'ti ti-file-text')}
+      ${renderHoldingGroup('ETFs', etfs, 'ti ti-chart-line')}
+      ${renderHoldingGroup('Individual Stocks', stocks, 'ti ti-building-store')}
+    </div>
+  `;
+}
+
+// Summary page - show the sign up CTA, then reveal on click
+document.getElementById('btn-back-summary').addEventListener('click', () => {
+  // Reset the summary view if portfolios were revealed
+  document.getElementById('summary-cta').style.display = 'block';
+  document.getElementById('summary-content').style.display = 'none';
+  showPage('page-options');
+});
+
+document.getElementById('btn-next-summary').addEventListener('click', () => {
+  const summaryContainer = document.getElementById('summary-content');
+  const budget = getBudgetValue();
+  const activeIndustries = getActiveIndustries();
+  const industryNames = activeIndustries.map(id => INDUSTRIES.find(i => i.id === id)?.name || id);
+
+  // Build the revealed portfolio content
+  let html = `
+    <div class="reveal-header">
+      <div class="success-icon" style="margin: 0 auto 10px;"><i class="ti ti-check"></i></div>
+      <div class="reveal-title">Your Portfolios Are Ready</div>
+      <div class="reveal-subtitle">Here's a detailed breakdown of each portfolio option based on your preferences.</div>
+    </div>
+  `;
+
+  // Show industries (selected + inferred)
+  html += `
     <div class="summary-card">
-      <div class="summary-title">Your Investments</div>
-      <div class="summary-row">
-        <span class="summary-label">Experience</span>
-        <span class="summary-value">${experienceLabel}</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">Investment Goal</span>
-        <span class="summary-value">${goalLabel}</span>
-      </div>
+      <div class="summary-title">Your Investment Profile</div>
       <div class="summary-row">
         <span class="summary-label">Budget</span>
-        <span class="summary-value">${budgetLabel}</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">Timeline</span>
-        <span class="summary-value">${timelineLabel}</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">Risk Tolerance</span>
-        <span class="summary-value">${riskLabel}</span>
-      </div>
-    </div>
-    
-    <div class="summary-card">
-      <div class="summary-title">Your Portfolio (${picks.length} stocks)</div>
-      <div class="summary-stocks">
-        ${picks.map(b => `<span class="summary-stock-tag">${b.emoji} ${b.ticker}</span>`).join('')}
-      </div>
-    </div>
-    
-    <div class="summary-card">
-      <div class="summary-title">Selected Portfolio</div>
-      <div class="summary-row">
-        <span class="summary-label">Strategy</span>
-        <span class="summary-value" style="color: ${portfolioData.color}">${portfolioData.name} · ${portfolioData.badge}</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">Investment</span>
         <span class="summary-value">$${budget.toLocaleString()}</span>
       </div>
       <div class="summary-row">
-        <span class="summary-label">Projected 1Y return</span>
-        <span class="summary-value" style="color: var(--color-green)">+${projectedReturn.toFixed(1)}% → $${getCompoundingValue(budget, projectedReturn, 1)}</span>
+        <span class="summary-label">Selected Industries</span>
+        <span class="summary-value">${selectedIndustries.map(id => INDUSTRIES.find(i => i.id === id)?.name || id).join(', ')}</span>
       </div>
+      ${inferredIndustries.length > 0 ? `
+        <div class="summary-row">
+          <span class="summary-label">Detected Industries</span>
+          <span class="summary-value" style="color: var(--color-accent);">${inferredIndustries.map(id => INDUSTRIES.find(i => i.id === id)?.name || id).join(', ')} <span style="font-size: 11px; color: var(--color-text-tertiary);">(based on your stock picks)</span></span>
+        </div>
+      ` : ''}
       <div class="summary-row">
-        <span class="summary-label">Projected 5Y value</span>
-        <span class="summary-value" style="color: var(--color-green)">$${getCompoundingValue(budget, projectedReturn, 5)}</span>
-      </div>
-      <div class="summary-row">
-        <span class="summary-label">Projected 10Y value</span>
-        <span class="summary-value" style="color: var(--color-green)">$${getCompoundingValue(budget, projectedReturn, 10)}</span>
+        <span class="summary-label">Stocks You Picked</span>
+        <span class="summary-value">${selected.map(id => BRANDS.find(b => b.id === id)?.ticker || id).join(', ')}</span>
       </div>
     </div>
-    
+  `;
+
+  // Show all three portfolios
+  html += renderPortfolioDetails('low');
+  html += renderPortfolioDetails('medium');
+  html += renderPortfolioDetails('high');
+
+  html += `
     <div style="text-align: center; padding: 16px 0 8px; color: var(--color-text-tertiary); font-size: 12px;">
       <i class="ti ti-info-circle" style="font-size: 14px; vertical-align: middle; margin-right: 4px;"></i>
       Projections are estimates based on historical performance. Actual returns may vary.
     </div>
   `;
-}
 
-// Summary navigation
-document.getElementById('btn-back-summary').addEventListener('click', () => {
-  showPage('page-options');
-});
+  summaryContainer.innerHTML = html;
 
-document.getElementById('btn-next-summary').addEventListener('click', () => {
-  showPage('page-signup');
+  // Hide the sign up button area, show the revealed content
+  document.getElementById('summary-cta').style.display = 'none';
+  document.getElementById('summary-content').style.display = 'block';
 });
 
 // Search functionality
