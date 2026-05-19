@@ -1,0 +1,2148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InvestWhat — Brand Portfolio Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --color-bg: #fafaf8;
+      --color-surface: #ffffff;
+      --color-surface-alt: #f5f5f3;
+      --color-text-primary: #1a1a1a;
+      --color-text-secondary: #6b6b6b;
+      --color-text-tertiary: #9e9e9e;
+      --color-border: #e8e8e6;
+      --color-border-light: #f0f0ee;
+      --color-accent: #1a1a2e;
+      --color-accent-hover: #2d2d44;
+      --color-green: #16a34a;
+      --color-red: #dc2626;
+      --radius-sm: 8px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-full: 100px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text-primary);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+
+    .seg {
+      max-width: 820px;
+      width: 100%;
+      padding: 40px 32px 48px;
+      background: var(--color-surface);
+      border-radius: 20px;
+      border: 1px solid var(--color-border-light);
+    }
+
+    /* Survey page styles */
+    .survey-head { text-align: center; margin-bottom: 32px; }
+    .survey-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+    }
+    .survey-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--color-text-primary);
+    }
+    .survey-sub {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      max-width: 440px;
+      margin: 0 auto;
+      line-height: 1.55;
+    }
+
+    .industry-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .industry-card {
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--color-surface);
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .industry-card:hover {
+      border-color: #ccc;
+      background: var(--color-surface-alt);
+    }
+    .industry-card.selected {
+      border-color: var(--color-accent);
+      background: var(--color-surface-alt);
+      box-shadow: 0 0 0 1px var(--color-accent);
+    }
+    .industry-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .industry-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 4px;
+    }
+    .industry-desc {
+      font-size: 11px;
+      color: var(--color-text-tertiary);
+      line-height: 1.4;
+    }
+    .industry-examples {
+      font-size: 10px;
+      color: var(--color-text-secondary);
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid var(--color-border-light);
+      font-style: italic;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      padding-top: 8px;
+    }
+    .btn-back {
+      padding: 14px 28px;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--color-text-secondary);
+      border: 1.5px solid var(--color-border);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: all 0.15s;
+    }
+    .btn-back:hover { border-color: var(--color-text-tertiary); color: var(--color-text-primary); }
+    .btn-next {
+      padding: 14px 32px;
+      border-radius: var(--radius-full);
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: background 0.15s;
+    }
+    .btn-next:hover:not(:disabled) { background: var(--color-accent-hover); }
+    .btn-next:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .seg-head { text-align: center; margin-bottom: 28px; }
+    .seg-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .seg-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--color-text-primary);
+    }
+    .seg-sub {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      max-width: 440px;
+      margin: 0 auto;
+      line-height: 1.55;
+    }
+
+    /* Experience level options */
+    .experience-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .exp-option {
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      cursor: pointer;
+      background: var(--color-surface);
+      transition: all 0.15s;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .exp-option:hover {
+      border-color: #ccc;
+      background: var(--color-surface-alt);
+    }
+    .exp-option.selected {
+      border-color: var(--color-accent);
+      background: var(--color-surface-alt);
+      box-shadow: 0 0 0 1px var(--color-accent);
+    }
+    .exp-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 40px;
+      min-width: 60px;
+    }
+    .exp-bar {
+      width: 10px;
+      border-radius: 2px;
+      background: #93c5fd;
+      transition: all 0.2s;
+    }
+    .exp-option.selected .exp-bar {
+      background: var(--color-accent);
+    }
+    .exp-bar:nth-child(1) { height: 30%; }
+    .exp-bar:nth-child(2) { height: 50%; }
+    .exp-bar:nth-child(3) { height: 70%; }
+    .exp-bar:nth-child(4) { height: 90%; }
+    .exp-bar:nth-child(5) { height: 100%; }
+    .exp-option:nth-child(1) .exp-bar:nth-child(n+2),
+    .exp-option:nth-child(2) .exp-bar:nth-child(n+3),
+    .exp-option:nth-child(3) .exp-bar:nth-child(n+4),
+    .exp-option:nth-child(4) .exp-bar:nth-child(n+5) {
+      background: #bfdbfe;
+      opacity: 0.5;
+    }
+    .exp-option.selected:nth-child(1) .exp-bar:nth-child(n+2),
+    .exp-option.selected:nth-child(2) .exp-bar:nth-child(n+3),
+    .exp-option.selected:nth-child(3) .exp-bar:nth-child(n+4),
+    .exp-option.selected:nth-child(4) .exp-bar:nth-child(n+5) {
+      background: var(--color-accent);
+      opacity: 1;
+    }
+    .exp-content {
+      flex: 1;
+    }
+    .exp-level {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 4px;
+    }
+    .exp-desc {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      line-height: 1.4;
+    }
+
+    /* Generic option lists (budget, timeline, risk) */
+    .option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .opt-item {
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      cursor: pointer;
+      background: var(--color-surface);
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .opt-item:hover {
+      border-color: #ccc;
+      background: var(--color-surface-alt);
+    }
+    .opt-item.selected {
+      border-color: var(--color-accent);
+      background: var(--color-surface-alt);
+      box-shadow: 0 0 0 1px var(--color-accent);
+    }
+    .opt-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 4px;
+    }
+    .opt-desc {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      line-height: 1.4;
+    }
+
+    /* Investment goal options */
+    .goal-option {
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      cursor: pointer;
+      background: var(--color-surface);
+      transition: all 0.15s;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .goal-option:hover {
+      border-color: #ccc;
+      background: var(--color-surface-alt);
+    }
+    .goal-option.selected {
+      border-color: var(--color-accent);
+      background: var(--color-surface-alt);
+      box-shadow: 0 0 0 1px var(--color-accent);
+    }
+    .goal-content {
+      flex: 1;
+    }
+    .goal-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 4px;
+    }
+    .goal-desc {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      line-height: 1.4;
+    }
+
+    /* Risk tolerance scenario */
+    .risk-scenario {
+      max-width: 500px;
+      margin: 0 auto 32px;
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      text-align: center;
+    }
+    .risk-scenario i {
+      font-size: 28px;
+      color: var(--color-text-tertiary);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .risk-scenario p {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+      font-style: italic;
+    }
+    .risk-scenario strong {
+      color: var(--color-text-primary);
+      font-style: normal;
+    }
+
+    .gamify-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      margin-bottom: 20px;
+    }
+    .gb-item { text-align: center; }
+    .gb-num {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    .gb-lbl {
+      font-size: 11px;
+      color: var(--color-text-tertiary);
+      margin-top: 2px;
+    }
+    .gb-div {
+      width: 1px;
+      height: 28px;
+      background: var(--color-border);
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .progress-pill {
+      height: 5px;
+      border-radius: var(--radius-full);
+      background: var(--color-border-light);
+      flex: 1;
+      max-width: 100px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--color-accent);
+      border-radius: var(--radius-full);
+      transition: width 0.4s ease;
+    }
+    .progress-label {
+      font-size: 12px;
+      color: var(--color-text-tertiary);
+    }
+
+    .category-tabs {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .cat-tab {
+      padding: 7px 18px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text-secondary);
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .cat-tab:hover { border-color: var(--color-text-tertiary); }
+    .cat-tab.active {
+      background: var(--color-accent);
+      color: #fff;
+      border-color: var(--color-accent);
+    }
+
+    .brand-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+    .brand-grid::-webkit-scrollbar {
+      width: 6px;
+    }
+    .brand-grid::-webkit-scrollbar-track {
+      background: var(--color-surface-alt);
+      border-radius: var(--radius-full);
+    }
+    .brand-grid::-webkit-scrollbar-thumb {
+      background: var(--color-border);
+      border-radius: var(--radius-full);
+    }
+    .brand-grid::-webkit-scrollbar-thumb:hover {
+      background: var(--color-text-tertiary);
+    }
+    .brand-card {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 14px 8px 12px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--color-surface);
+      transition: all 0.15s;
+      position: relative;
+      user-select: none;
+    }
+    .brand-card:hover {
+      border-color: #ccc;
+      background: var(--color-surface-alt);
+    }
+    .brand-card.selected {
+      border: 2px solid var(--color-accent);
+      background: var(--color-surface-alt);
+    }
+    .brand-card.selected .check-badge { display: flex; }
+    .brand-card.disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .check-badge {
+      display: none;
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: #fff;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      margin: 0 auto 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .brand-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 2px;
+    }
+    .brand-ticker {
+      font-size: 10px;
+      color: var(--color-text-tertiary);
+      margin-bottom: 3px;
+    }
+    .brand-familiar {
+      font-size: 9px;
+      color: var(--color-text-secondary);
+      font-style: italic;
+      margin-top: 2px;
+    }
+    .brand-chg-pos { font-size: 11px; font-weight: 500; color: var(--color-green); }
+    .brand-chg-neg { font-size: 11px; font-weight: 500; color: var(--color-red); }
+
+    .search-container {
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 12px 16px 12px 42px;
+      border-radius: var(--radius-full);
+      border: 1.5px solid var(--color-border);
+      font-size: 14px;
+      font-family: var(--font-sans);
+      color: var(--color-text-primary);
+      background: var(--color-surface);
+      transition: all 0.15s;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(26, 26, 46, 0.08);
+    }
+    .search-input::placeholder {
+      color: var(--color-text-tertiary);
+    }
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: var(--color-text-tertiary);
+      pointer-events: none;
+    }
+    .search-clear {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: var(--color-text-tertiary);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+      display: none;
+    }
+    .search-clear.show { display: block; }
+
+    .no-results {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--color-text-tertiary);
+      font-size: 14px;
+      display: none;
+    }
+    .no-results i {
+      font-size: 32px;
+      display: block;
+      margin-bottom: 8px;
+      opacity: 0.4;
+    }
+
+    .portfolio-preview {
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+    }
+    .pp-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .pp-left-label {
+      font-size: 12px;
+      color: var(--color-text-tertiary);
+      margin-bottom: 4px;
+    }
+    .pp-value {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    .pp-sub {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      margin-top: 2px;
+    }
+    .pp-count-badge {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      color: var(--color-text-secondary);
+    }
+    .pp-empty {
+      text-align: center;
+      padding: 24px 0;
+      font-size: 13px;
+      color: var(--color-text-tertiary);
+    }
+    .pp-empty i {
+      font-size: 24px;
+      display: block;
+      margin-bottom: 6px;
+      opacity: 0.4;
+    }
+    .holding-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .hl-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+    }
+    .hl-left { display: flex; align-items: center; gap: 10px; }
+    .hl-logo {
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+    .hl-name { font-size: 13px; font-weight: 600; color: var(--color-text-primary); }
+    .hl-alloc { font-size: 10px; color: var(--color-text-tertiary); }
+    .hl-right { text-align: right; }
+    .hl-val { font-size: 13px; font-weight: 600; color: var(--color-text-primary); }
+    .hl-chg-pos { font-size: 10px; font-weight: 500; color: var(--color-green); }
+    .hl-chg-neg { font-size: 10px; font-weight: 500; color: var(--color-red); }
+    .hl-remove {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px 4px;
+      color: var(--color-text-tertiary);
+      font-size: 14px;
+      margin-left: 6px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+    }
+    .hl-remove:hover { color: var(--color-red); background: var(--color-surface-alt); }
+
+    .alloc-bar {
+      height: 5px;
+      border-radius: var(--radius-full);
+      background: var(--color-border);
+      margin-bottom: 16px;
+      overflow: hidden;
+      display: flex;
+      gap: 2px;
+    }
+    .alloc-segment {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 0.4s ease;
+    }
+
+    .pp-cta {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn-build {
+      flex: 1;
+      padding: 13px;
+      border-radius: var(--radius-md);
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: background 0.15s;
+    }
+    .btn-build:hover:not(:disabled) { background: var(--color-accent-hover); }
+    .btn-build:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-reset {
+      padding: 13px 18px;
+      border-radius: var(--radius-md);
+      background: transparent;
+      color: var(--color-text-secondary);
+      border: 1px solid var(--color-border);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: all 0.15s;
+    }
+    .btn-reset:hover { border-color: var(--color-text-tertiary); color: var(--color-text-primary); }
+
+    .success-state {
+      text-align: center;
+      padding: 16px;
+      display: none;
+    }
+    .success-state.show { display: block; }
+
+    /* Portfolio options page styles */
+    .po-head { text-align: center; margin-bottom: 28px; }
+    .po-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .po-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--color-text-primary);
+    }
+    .po-sub {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      max-width: 440px;
+      margin: 0 auto;
+      line-height: 1.55;
+    }
+
+    .portfolio-options {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .po-card {
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      cursor: pointer;
+      background: var(--color-surface);
+      transition: all 0.15s;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .po-card:hover {
+      border-color: #ccc;
+      background: var(--color-surface-alt);
+    }
+    .po-card.selected {
+      border-color: var(--color-accent);
+      background: var(--color-surface-alt);
+      box-shadow: 0 0 0 1px var(--color-accent);
+    }
+    .po-left {
+      flex: 1;
+    }
+    .po-risk-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .po-risk-low { background: #dcfce7; color: #166534; }
+    .po-risk-medium { background: #fef3c7; color: #92400e; }
+    .po-risk-high { background: #fef2f2; color: #991b1b; }
+    .po-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--color-text-primary);
+    }
+    .po-desc {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .po-stocks {
+      font-size: 11px;
+      color: var(--color-text-tertiary);
+    }
+    .po-right {
+      text-align: right;
+      min-width: 140px;
+    }
+    .po-earnings-label {
+      font-size: 11px;
+      color: var(--color-text-tertiary);
+      margin-bottom: 4px;
+    }
+    .po-earnings-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--color-green);
+      margin-bottom: 2px;
+    }
+    .po-earnings-ret {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+    }
+    .po-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: #fff;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin-top: 8px;
+      margin-left: auto;
+    }
+    .po-card.selected .po-check { display: flex; }
+
+    /* Portfolio comparison table */
+    .po-comparison {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--color-border-light);
+    }
+    .po-comp-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .po-comp-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--color-text-secondary);
+      padding: 3px 0;
+    }
+    .po-comp-val {
+      font-weight: 600;
+      color: var(--color-green);
+    }
+
+    .success-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #dcfce7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      font-size: 20px;
+      color: var(--color-green);
+    }
+
+    /* Summary page styles */
+    .summary-card {
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+    .summary-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--color-border-light);
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-label {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+    }
+    .summary-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    .summary-stocks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .summary-stock-tag {
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--color-text-primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      body { padding: 16px 8px; }
+      .seg { padding: 28px 16px 36px; }
+      .industry-grid { grid-template-columns: repeat(2, 1fr); }
+      .brand-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .brand-card { padding: 12px 6px 10px; }
+      .brand-logo { width: 36px; height: 36px; font-size: 16px; }
+      .category-tabs { gap: 6px; }
+      .cat-tab { padding: 6px 14px; font-size: 12px; }
+      .gamify-bar { gap: 18px; }
+      .pp-cta { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="seg">
+  <!-- Intro Page -->
+  <div class="page active" id="page-intro">
+    <div class="survey-head">
+      <div style="font-size: 48px; margin-bottom: 20px;">
+        <i class="ti ti-clipboard-list"></i>
+      </div>
+      <div class="survey-title">Before you sign up</div>
+      <div class="survey-sub">Answer a few quick questions so we can build a personalized investment portfolio just for you. It only takes a minute.</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px; max-width: 360px; margin: 32px auto 0;">
+      <div style="display: flex; align-items: center; gap: 12px; color: var(--color-text-secondary); font-size: 14px;">
+        <i class="ti ti-clock" style="font-size: 20px; color: var(--color-accent);"></i>
+        Takes less than 2 minutes
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; color: var(--color-text-secondary); font-size: 14px;">
+        <i class="ti ti-chart-dots" style="font-size: 20px; color: var(--color-accent);"></i>
+        Get a tailored portfolio recommendation
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; color: var(--color-text-secondary); font-size: 14px;">
+        <i class="ti ti-gift" style="font-size: 20px; color: var(--color-accent);"></i>
+        Get your portfolio free — just sign up, no payment needed
+      </div>
+    </div>
+
+    <div class="nav-buttons" style="margin-top: 40px;">
+      <button class="btn-next" id="btn-start-survey">Start the Survey</button>
+    </div>
+  </div>
+
+  <!-- Step 1: Investing Experience Survey -->
+  <div class="page" id="page-experience">
+    <div class="survey-head">
+      <div class="survey-label">Step 1 of 9</div>
+      <div class="survey-title">How much do you know about investing?</div>
+      <div class="survey-sub">Tell us about your experience level so we can tailor your journey.</div>
+    </div>
+
+    <div class="experience-options" id="experience-options"></div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" id="btn-back-experience">Go Back</button>
+      <button class="btn-next" id="btn-next-experience" disabled>Select your experience level</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Investment Goal Page -->
+  <div class="page" id="page-goal">
+    <div class="survey-head">
+      <div class="survey-label">Step 2 of 9</div>
+      <div class="survey-title">Why do you want to invest?</div>
+      <div class="survey-sub">Tell us your investment goals so we can recommend the best portfolio for you.</div>
+    </div>
+
+    <div class="experience-options" id="goal-options"></div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" id="btn-back-goal">Go Back</button>
+      <button class="btn-next" id="btn-next-goal" disabled>Select your investment goal</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Budget Page -->
+  <div class="page" id="page-budget">
+    <div class="survey-head">
+      <div class="survey-label">Step 3 of 9</div>
+      <div class="survey-title">How much do you want to invest?</div>
+      <div class="survey-sub">You can start with any amount. This helps us show realistic projections.</div>
+    </div>
+
+    <div class="option-list" id="budget-options"></div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" id="btn-back-budget">Go Back</button>
+      <button class="btn-next" id="btn-next-budget" disabled>Select your investment amount</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Timeline Page -->
+  <div class="page" id="page-timeline">
+    <div class="survey-head">
+      <div class="survey-label">Step 4 of 9</div>
+      <div class="survey-title">How long do you plan to invest?</div>
+      <div class="survey-sub">Your timeline helps us recommend the right risk level and show potential growth.</div>
+    </div>
+
+    <div class="option-list" id="timeline-options"></div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" id="btn-back-timeline">Go Back</button>
+      <button class="btn-next" id="btn-next-timeline" disabled>Select your investment timeline</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Risk Tolerance Page -->
+  <div class="page" id="page-risk">
+    <div class="survey-head">
+      <div class="survey-label">Step 5 of 9</div>
+      <div class="survey-title">How do you handle market changes?</div>
+      <div class="survey-sub">There's no right or wrong answer — this helps us understand your comfort with risk.</div>
+    </div>
+
+    <div class="risk-scenario">
+      <i class="ti ti-chart-line"></i>
+      <p>You invest <strong>$1,000</strong>. A month later, your portfolio drops to <strong>$800</strong>. What do you do?</p>
+    </div>
+
+    <div class="option-list" id="risk-options"></div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" id="btn-back-risk">Go Back</button>
+      <button class="btn-next" id="btn-next-risk" disabled>Select your response</button>
+    </div>
+  </div>
+
+  <!-- Step 6: Industry Selection -->
+  <div class="page" id="page-survey">
+    <div class="survey-head">
+      <div class="survey-label">Step 6 of 9</div>
+      <div class="survey-title">Which industry are you interested in?</div>
+      <div class="survey-sub">Select at least one industry you know well or want to invest in.</div>
+    </div>
+
+    <div class="industry-grid" id="industry-grid"></div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" id="btn-back-survey">Go Back</button>
+      <button class="btn-next" id="btn-next-survey" disabled>Select at least 1 industry</button>
+    </div>
+  </div>
+
+  <!-- Step 7: Portfolio Builder -->
+  <div class="page" id="page-portfolio">
+  <div class="seg-head">
+    <div class="seg-label">Step 7 of 9</div>
+    <div class="seg-title">Pick brands you love and know</div>
+    <div class="seg-sub" id="portfolio-sub">Choose up to 5 companies you recognise. We'll turn them into your first investment portfolio.</div>
+  </div>
+
+  <div class="gamify-bar">
+    <div class="gb-item">
+      <div class="gb-num" id="selected-count">0</div>
+      <div class="gb-lbl">selected</div>
+    </div>
+    <div class="gb-div"></div>
+    <div class="gb-item">
+      <div class="gb-num">5</div>
+      <div class="gb-lbl">max picks</div>
+    </div>
+    <div class="gb-div"></div>
+    <div class="gb-item">
+      <div class="gb-num" id="est-return">—</div>
+      <div class="gb-lbl">avg 1Y return</div>
+    </div>
+    <div class="gb-div"></div>
+    <div class="gb-item">
+      <div class="gb-num" id="sector-count">—</div>
+      <div class="gb-lbl">sectors covered</div>
+    </div>
+  </div>
+
+  <div class="progress-row">
+    <div class="progress-pill"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="progress-label" id="prog-label">Pick at least 1 brand to start</div>
+  </div>
+
+  <div class="search-container">
+    <i class="ti ti-search search-icon"></i>
+    <input type="text" class="search-input" id="search-input" placeholder="Search for stocks by name or ticker...">
+    <button class="search-clear" id="search-clear"><i class="ti ti-x"></i></button>
+  </div>
+
+  <div class="category-tabs">
+    <div class="cat-tab active" data-cat="recommended">Recommended</div>
+    <div class="cat-tab" data-cat="all">All brands</div>
+    <div class="cat-tab" data-cat="tech">Tech</div>
+    <div class="cat-tab" data-cat="healthcare">Healthcare</div>
+    <div class="cat-tab" data-cat="finance">Finance</div>
+    <div class="cat-tab" data-cat="consumer">Consumer Goods</div>
+    <div class="cat-tab" data-cat="ev">Energy</div>
+    <div class="cat-tab" data-cat="entertainment">Entertainment</div>
+    <div class="cat-tab" data-cat="realestate">Real Estate</div>
+    <div class="cat-tab" data-cat="industrial">Industrial</div>
+    <div class="cat-tab" data-cat="communication">Communication</div>
+  </div>
+
+  <div class="brand-grid" id="brand-grid"></div>
+  <div class="no-results" id="no-results">
+    <i class="ti ti-search-off"></i>
+    No stocks found matching "<span id="no-results-term"></span>"
+  </div>
+
+  <div class="portfolio-preview">
+    <div class="pp-top">
+      <div>
+        <div class="pp-left-label">Your portfolio preview</div>
+        <div class="pp-value" id="pp-val">$1,000.00</div>
+        <div class="pp-sub" id="pp-sub">Based on starting investment</div>
+      </div>
+      <div class="pp-count-badge" id="pp-badge">0 / 5 picked</div>
+    </div>
+
+    <div id="pp-empty" class="pp-empty">
+      <i class="ti ti-hand-click" aria-hidden="true"></i>
+      Tap any brand above to add it to your portfolio
+    </div>
+
+    <div id="holding-list" class="holding-list" style="display:none"></div>
+
+    <div class="alloc-bar" id="alloc-bar" style="display:none"></div>
+  </div>
+
+  <div class="nav-buttons" style="margin-top: 20px;">
+    <button class="btn-back" id="btn-back-portfolio">Go Back</button>
+    <button class="btn-next" id="btn-build" disabled>Build My Portfolio</button>
+  </div>
+  </div>
+
+  <!-- Step 8: Portfolio Options Page -->
+  <div class="page" id="page-options">
+    <div class="po-head">
+      <div class="po-label">Step 8 of 9</div>
+      <div class="po-title">Select the portfolio you want to go with!</div>
+      <div class="po-sub">Based on your picks, we've created three portfolio options with different risk levels.</div>
+    </div>
+
+    <div class="portfolio-options" id="portfolio-options"></div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" id="btn-back-options">Go Back</button>
+      <button class="btn-next" id="btn-next-options" disabled>Select a portfolio to continue</button>
+    </div>
+  </div>
+
+  <!-- Step 9: Sign Up CTA Page -->
+  <div class="page" id="page-summary">
+    <div class="survey-head">
+      <div class="survey-label">Step 9 of 9</div>
+      <div class="survey-title">Your portfolio is ready!</div>
+      <div class="survey-sub">Sign up now to receive your full portfolio summary, including in-depth details about your selected stocks, projected performance, and personalized investment insights.</div>
+    </div>
+
+    <div style="text-align: center; padding: 30px 0;">
+      <div style="background: var(--color-surface-alt); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 24px; max-width: 400px; margin: 0 auto 24px; text-align: left;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <i class="ti ti-mail" style="font-size: 22px; color: var(--color-accent);"></i>
+          <span style="font-size: 14px; font-weight: 600;">What you'll get:</span>
+        </div>
+        <div style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.8;">
+          <div><i class="ti ti-check" style="color: var(--color-green); margin-right: 6px;"></i>Full portfolio breakdown with your stocks</div>
+          <div><i class="ti ti-check" style="color: var(--color-green); margin-right: 6px;"></i>Projected performance analysis</div>
+          <div><i class="ti ti-check" style="color: var(--color-green); margin-right: 6px;"></i>Risk level explanation</div>
+          <div><i class="ti ti-check" style="color: var(--color-green); margin-right: 6px;"></i>Personalized next steps</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" id="btn-back-summary">Go Back</button>
+      <button class="btn-next" id="btn-next-summary">Sign Up to Receive Summary</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const BRANDS = [
+  { id:'aapl',  name:'Apple',       ticker:'AAPL',  emoji:'🍎', color:'#f5f5f5', change:'+0.72%', ret:18.2, sector:'tech',     cat:'tech',     marketCap:3200, familiar: true },
+  { id:'msft',  name:'Microsoft',   ticker:'MSFT',  emoji:'🪟', color:'#e8f0fe', change:'-1.19%', ret:14.1, sector:'tech',     cat:'tech',     marketCap:3100, familiar: true },
+  { id:'nvda',  name:'Nvidia',      ticker:'NVDA',  emoji:'💚', color:'#dcfce7', change:'+0.61%', ret:38.7, sector:'tech',     cat:'tech',     marketCap:2900, familiar: true },
+  { id:'googl', name:'Google',      ticker:'GOOGL', emoji:'G',   color:'#fef3c7', change:'-0.33%', ret:12.8, sector:'tech',     cat:'tech',     marketCap:2100, familiar: true },
+  { id:'meta',  name:'Meta',        ticker:'META',  emoji:'♾️', color:'#e8f0fe', change:'+1.44%', ret:22.4, sector:'tech',     cat:'tech',     marketCap:1400, familiar: true },
+  { id:'tsm',   name:'TSMC',        ticker:'TSM',   emoji:'🔬', color:'#dcfce7', change:'-1.79%', ret:31.2, sector:'tech',     cat:'tech',     marketCap:900 },
+  { id:'orcl',  name:'Oracle',      ticker:'ORCL',  emoji:'🔴', color:'#fef2f2', change:'+0.45%', ret:15.3, sector:'tech',     cat:'tech',     marketCap:420 },
+  { id:'crm',   name:'Salesforce',  ticker:'CRM',   emoji:'☁️', color:'#e8f0fe', change:'+0.92%', ret:11.7, sector:'tech',     cat:'tech',     marketCap:290 },
+  { id:'adbe',  name:'Adobe',       ticker:'ADBE',  emoji:'🎨', color:'#fef2f2', change:'-0.58%', ret:9.4,  sector:'tech',     cat:'tech',     marketCap:240 },
+  { id:'intc',  name:'Intel',       ticker:'INTC',  emoji:'🔵', color:'#e8f0fe', change:'-2.14%', ret:-8.2, sector:'tech',     cat:'tech',     marketCap:180 },
+  { id:'amd',   name:'AMD',         ticker:'AMD',   emoji:'🔷', color:'#e8f0fe', change:'+1.83%', ret:22.1, sector:'tech',     cat:'tech',     marketCap:220 },
+  { id:'nflx',  name:'Netflix',     ticker:'NFLX',  emoji:'🎬', color:'#fef2f2', change:'+0.88%', ret:24.6, sector:'tech',     cat:'tech',     marketCap:310, familiar: true },
+  { id:'sap',   name:'SAP',         ticker:'SAP',   emoji:'🟦', color:'#e8f0fe', change:'+0.34%', ret:13.2, sector:'tech',     cat:'tech',     marketCap:250 },
+  { id:'ibm',   name:'IBM',         ticker:'IBM',   emoji:'🔵', color:'#e8f0fe', change:'+0.12%', ret:6.8,  sector:'tech',     cat:'tech',     marketCap:170 },
+  { id:'qcom',  name:'Qualcomm',    ticker:'QCOM',  emoji:'📡', color:'#dcfce7', change:'+0.76%', ret:14.5, sector:'tech',     cat:'tech',     marketCap:200 },
+  
+  { id:'amzn',  name:'Amazon',      ticker:'AMZN',  emoji:'📦', color:'#fff7ed', change:'-1.18%', ret:11.3, sector:'consumer', cat:'consumer', marketCap:2000, familiar: true },
+  { id:'mcd',   name:"McDonald's",  ticker:'MCD',   emoji:'🍟', color:'#fef3c7', change:'+0.21%', ret:8.3,  sector:'consumer', cat:'consumer', marketCap:210, familiar: true },
+  { id:'nke',   name:'Nike',        ticker:'NKE',   emoji:'✔️', color:'#f5f5f5', change:'+0.55%', ret:6.2,  sector:'consumer', cat:'consumer', marketCap:130, familiar: true },
+  { id:'sbux',  name:'Starbucks',   ticker:'SBUX',  emoji:'☕', color:'#dcfce7', change:'+0.38%', ret:4.8,  sector:'consumer', cat:'consumer', marketCap:110, familiar: true },
+  { id:'baba',  name:'Alibaba',     ticker:'BABA',  emoji:'🛒', color:'#fff7ed', change:'+1.12%', ret:9.4,  sector:'consumer', cat:'consumer', marketCap:210 },
+  { id:'wmt',   name:'Walmart',     ticker:'WMT',   emoji:'🏬', color:'#e8f0fe', change:'+0.28%', ret:12.1, sector:'consumer', cat:'consumer', marketCap:480, familiar: true },
+  { id:'cost',  name:'Costco',      ticker:'COST',  emoji:'🏪', color:'#fef3c7', change:'+0.41%', ret:15.3, sector:'consumer', cat:'consumer', marketCap:380, familiar: true },
+  { id:'tgt',   name:'Target',      ticker:'TGT',   emoji:'🎯', color:'#fef2f2', change:'-0.67%', ret:3.2,  sector:'consumer', cat:'consumer', marketCap:70, familiar: true },
+  { id:'hd',    name:"Home Depot",  ticker:'HD',    emoji:'🏠', color:'#fff7ed', change:'+0.33%', ret:9.8,  sector:'consumer', cat:'consumer', marketCap:380, familiar: true },
+  { id:'low',   name:"Lowe's",      ticker:'LOW',   emoji:'🔧', color:'#e8f0fe', change:'+0.19%', ret:7.4,  sector:'consumer', cat:'consumer', marketCap:150 },
+  { id:'ko',    name:'Coca-Cola',   ticker:'KO',    emoji:'🥤', color:'#fef2f2', change:'+0.15%', ret:5.6,  sector:'consumer', cat:'consumer', marketCap:270, familiar: true },
+  { id:'pep',   name:'PepsiCo',     ticker:'PEP',   emoji:'🥤', color:'#e8f0fe', change:'+0.22%', ret:6.1,  sector:'consumer', cat:'consumer', marketCap:230, familiar: true },
+  
+  { id:'jpm',   name:'JPMorgan',    ticker:'JPM',   emoji:'🏦', color:'#e8f0fe', change:'+0.43%', ret:16.5, sector:'finance',  cat:'finance',  marketCap:580 },
+  { id:'v',     name:'Visa',        ticker:'V',     emoji:'💳', color:'#e8f0fe', change:'+0.29%', ret:13.2, sector:'finance',  cat:'finance',  marketCap:560, familiar: true },
+  { id:'ma',    name:'Mastercard',  ticker:'MA',    emoji:'💳', color:'#fff7ed', change:'+0.35%', ret:14.8, sector:'finance',  cat:'finance',  marketCap:420 },
+  { id:'bac',   name:'Bank of America', ticker:'BAC', emoji:'🏛️', color:'#e8f0fe', change:'+0.51%', ret:11.2, sector:'finance', cat:'finance', marketCap:320, familiar: true },
+  { id:'wfc',   name:'Wells Fargo', ticker:'WFC',   emoji:'🏛️', color:'#fef3c7', change:'+0.38%', ret:9.7,  sector:'finance',  cat:'finance',  marketCap:210 },
+  { id:'gs',    name:'Goldman Sachs', ticker:'GS',  emoji:'🔶', color:'#fff7ed', change:'+0.62%', ret:18.3, sector:'finance',  cat:'finance',  marketCap:150 },
+  { id:'ms',    name:'Morgan Stanley', ticker:'MS', emoji:'🔷', color:'#e8f0fe', change:'+0.47%', ret:15.1, sector:'finance',  cat:'finance',  marketCap:160 },
+  { id:'c',     name:'Citigroup',   ticker:'C',     emoji:'🔵', color:'#e8f0fe', change:'+0.73%', ret:12.4, sector:'finance',  cat:'finance',  marketCap:120 },
+  { id:'axp',   name:'AmEx',        ticker:'AXP',   emoji:'💎', color:'#e8f0fe', change:'+0.28%', ret:17.2, sector:'finance',  cat:'finance',  marketCap:180, familiar: true },
+  { id:'brk',   name:'Berkshire',   ticker:'BRK.B', emoji:'🏢', color:'#f5f5f5', change:'+0.15%', ret:14.6, sector:'finance',  cat:'finance',  marketCap:900, familiar: true },
+  
+  { id:'tsla',  name:'Tesla',       ticker:'TSLA',  emoji:'⚡', color:'#fef2f2', change:'+4.92%', ret:28.1, sector:'ev',       cat:'ev',       marketCap:800, familiar: true },
+  { id:'rivn',  name:'Rivian',      ticker:'RIVN',  emoji:'🚙', color:'#dcfce7', change:'-2.34%', ret:-12.4, sector:'ev',      cat:'ev',       marketCap:15 },
+  { id:'lcid',  name:'Lucid',       ticker:'LCID',  emoji:'🚗', color:'#e8f0fe', change:'-1.87%', ret:-18.2, sector:'ev',      cat:'ev',       marketCap:10 },
+  { id:'nio',   name:'NIO',         ticker:'NIO',   emoji:'🔋', color:'#fef3c7', change:'+1.23%', ret:-5.6,  sector:'ev',      cat:'ev',       marketCap:12 },
+  { id:'xom',   name:'ExxonMobil',  ticker:'XOM',   emoji:'🛢️', color:'#f5f5f5', change:'+0.45%', ret:8.7,  sector:'energy',   cat:'ev',       marketCap:460 },
+  { id:'cvx',   name:'Chevron',     ticker:'CVX',   emoji:'🛢️', color:'#fef2f2', change:'+0.38%', ret:7.9,  sector:'energy',   cat:'ev',       marketCap:290 },
+  { id:'cop',   name:'ConocoPhillips', ticker:'COP', emoji:'⛽', color:'#fff7ed', change:'+0.52%', ret:9.2, sector:'energy',   cat:'ev',       marketCap:140 },
+  { id:'enb',   name:'Enbridge',    ticker:'ENB',   emoji:'🔵', color:'#e8f0fe', change:'+0.21%', ret:6.4,  sector:'energy',   cat:'ev',       marketCap:90 },
+  
+  { id:'llly',  name:'Eli Lilly',   ticker:'LLY',   emoji:'💊', color:'#dcfce7', change:'+1.24%', ret:32.4, sector:'healthcare', cat:'healthcare', marketCap:780 },
+  { id:'unh',   name:'UnitedHealth', ticker:'UNH',  emoji:'🏥', color:'#e8f0fe', change:'+0.38%', ret:11.2, sector:'healthcare', cat:'healthcare', marketCap:480 },
+  { id:'jnj',   name:'J&J',         ticker:'JNJ',   emoji:'🩺', color:'#f5f5f5', change:'+0.15%', ret:5.8,  sector:'healthcare', cat:'healthcare', marketCap:380, familiar: true },
+  { id:'pfe',   name:'Pfizer',      ticker:'PFE',   emoji:'💉', color:'#e8f0fe', change:'-0.42%', ret:-2.1, sector:'healthcare', cat:'healthcare', marketCap:160, familiar: true },
+  { id:'mrk',   name:'Merck',       ticker:'MRK',   emoji:'🔬', color:'#dcfce7', change:'+0.56%', ret:9.3,  sector:'healthcare', cat:'healthcare', marketCap:280 },
+  { id:'abbv',  name:'AbbVie',      ticker:'ABBV',  emoji:'🧬', color:'#fef2f2', change:'+0.31%', ret:12.7, sector:'healthcare', cat:'healthcare', marketCap:310 },
+  { id:'tmo',   name:'Thermo Fisher', ticker:'TMO', emoji:'🧪', color:'#e8f0fe', change:'+0.28%', ret:10.4, sector:'healthcare', cat:'healthcare', marketCap:210 },
+  { id:'bmy',   name:'Bristol-Myers', ticker:'BMY', emoji:'💊', color:'#fef3c7', change:'-0.18%', ret:4.2, sector:'healthcare', cat:'healthcare', marketCap:120 },
+  
+  { id:'dis',   name:'Disney',      ticker:'DIS',   emoji:'🏰', color:'#e8f0fe', change:'+0.67%', ret:11.8, sector:'entertainment', cat:'entertainment', marketCap:210, familiar: true },
+  { id:'cmcsa', name:'Comcast',     ticker:'CMCSA', emoji:'📺', color:'#e8f0fe', change:'+0.24%', ret:7.3,  sector:'entertainment', cat:'entertainment', marketCap:170 },
+  { id:'ea',    name:'EA Games',    ticker:'EA',    emoji:'🎮', color:'#fef2f2', change:'-0.45%', ret:5.2,  sector:'entertainment', cat:'entertainment', marketCap:40, familiar: true },
+  { id:'ttwo',  name:'Take-Two',    ticker:'TTWO',  emoji:'🎮', color:'#fef3c7', change:'+0.82%', ret:8.9,  sector:'entertainment', cat:'entertainment', marketCap:28 },
+  { id:'lyv',   name:'Live Nation', ticker:'LYV',   emoji:'🎵', color:'#dcfce7', change:'+1.15%', ret:14.2, sector:'entertainment', cat:'entertainment', marketCap:25 },
+  { id:'wbd',   name:'Warner Bros', ticker:'WBD',   emoji:'🎬', color:'#fef2f2', change:'-1.23%', ret:-6.4, sector:'entertainment', cat:'entertainment', marketCap:22 },
+  
+  { id:'amh',   name:'American Homes 4 Rent', ticker:'AMH', emoji:'🏠', color:'#dcfce7', change:'+0.35%', ret:9.1, sector:'realestate', cat:'realestate', marketCap:16 },
+  { id:'eqr',   name:'Equity Residential', ticker:'EQR', emoji:'🏢', color:'#e8f0fe', change:'+0.28%', ret:7.4, sector:'realestate', cat:'realestate', marketCap:28 },
+  { id:'spg',   name:'Simon Property', ticker:'SPG', emoji:'🏬', color:'#fef3c7', change:'+0.42%', ret:11.3, sector:'realestate', cat:'realestate', marketCap:45 },
+  { id:'pls',   name:'Prologis',    ticker:'PLD',   emoji:'📦', color:'#fff7ed', change:'+0.31%', ret:8.7,  sector:'realestate', cat:'realestate', marketCap:110 },
+  { id:'avl',   name:'AvalonBay',   ticker:'AVB',   emoji:'🏠', color:'#e8f0fe', change:'+0.19%', ret:6.8,  sector:'realestate', cat:'realestate', marketCap:32 },
+  { id:'invh',  name:'Invitation Homes', ticker:'INVH', emoji:'🏡', color:'#dcfce7', change:'+0.26%', ret:8.2, sector:'realestate', cat:'realestate', marketCap:22 },
+  
+  { id:'cat',   name:'Caterpillar', ticker:'CAT',   emoji:'🚜', color:'#fef3c7', change:'+0.54%', ret:13.2, sector:'industrial', cat:'industrial', marketCap:170 },
+  { id:'de',    name:'John Deere',  ticker:'DE',    emoji:'🚜', color:'#dcfce7', change:'+0.38%', ret:10.4, sector:'industrial', cat:'industrial', marketCap:120 },
+  { id:'ge',    name:'GE Aerospace', ticker:'GE',   emoji:'✈️', color:'#e8f0fe', change:'+0.72%', ret:16.8, sector:'industrial', cat:'industrial', marketCap:180 },
+  { id:'ups',   name:'UPS',         ticker:'UPS',   emoji:'📦', color:'#fff7ed', change:'-0.28%', ret:4.2,  sector:'industrial', cat:'industrial', marketCap:75, familiar: true },
+  { id:'fdx',   name:'FedEx',       ticker:'FDX',   emoji:'📦', color:'#fef2f2', change:'+0.45%', ret:7.6,  sector:'industrial', cat:'industrial', marketCap:65, familiar: true },
+  { id:'hwm',   name:'Howmet Aerospace', ticker:'HWM', emoji:'🔧', color:'#e8f0fe', change:'+0.61%', ret:18.4, sector:'industrial', cat:'industrial', marketCap:42 },
+  
+  { id:'t',     name:'AT&T',        ticker:'T',     emoji:'📞', color:'#e8f0fe', change:'+0.18%', ret:5.2,  sector:'communication', cat:'communication', marketCap:160, familiar: true },
+  { id:'tmus',  name:'T-Mobile',    ticker:'TMUS',  emoji:'📱', color:'#dcfce7', change:'+0.52%', ret:12.8, sector:'communication', cat:'communication', marketCap:210, familiar: true },
+  { id:'vz',    name:'Verizon',     ticker:'VZ',    emoji:'📞', color:'#fef2f2', change:'+0.14%', ret:4.6,  sector:'communication', cat:'communication', marketCap:180, familiar: true },
+  { id:'chtr',  name:'Charter',     ticker:'CHTR',  emoji:'📡', color:'#e8f0fe', change:'-0.38%', ret:3.2,  sector:'communication', cat:'communication', marketCap:50 },
+  { id:'dish',  name:'DISH Network', ticker:'DISH', emoji:'📡', color:'#fef3c7', change:'-0.92%', ret:-8.4, sector:'communication', cat:'communication', marketCap:8 },
+  { id:'lumen', name:'Lumen',       ticker:'LUMN',  emoji:'🌐', color:'#e8f0fe', change:'+0.24%', ret:-2.1, sector:'communication', cat:'communication', marketCap:6 },
+];
+
+const ALLOC_COLORS = ['#1a1a2e','#3b82f6','#10b981','#f59e0b','#ef4444'];
+const MAX = 5;
+let selected = [];
+let activeCat = 'recommended';
+let searchQuery = '';
+
+// State for new questions
+let investmentBudget = null;
+let investmentTimeline = null;
+let riskTolerance = null;
+
+// Industry selection data with improved descriptions
+const INDUSTRIES = [
+  { id: 'tech', name: 'Technology', icon: 'ti ti-device-laptop', desc: 'Software, hardware, and digital services', examples: 'Apple, Microsoft, Google' },
+  { id: 'healthcare', name: 'Healthcare', icon: 'ti ti-heart-plus', desc: 'Medical devices, pharma, and health services', examples: 'J&J, Pfizer, UnitedHealth' },
+  { id: 'finance', name: 'Finance', icon: 'ti ti-building-bank', desc: 'Banks, insurance, and financial services', examples: 'Visa, JPMorgan, AmEx' },
+  { id: 'consumer', name: 'Consumer Goods', icon: 'ti ti-shopping-bag', desc: 'Retail, food, and everyday products', examples: 'Amazon, Nike, Coca-Cola' },
+  { id: 'energy', name: 'Energy', icon: 'ti ti-bolt', desc: 'Oil, gas, renewables, and utilities', examples: 'Tesla, ExxonMobil, Chevron' },
+  { id: 'entertainment', name: 'Entertainment', icon: 'ti ti-movie', desc: 'Media, gaming, and leisure', examples: 'Disney, Netflix, EA Games' },
+  { id: 'realestate', name: 'Real Estate', icon: 'ti ti-building', desc: 'Property, REITs, and development', examples: 'Simon Property, Prologis' },
+  { id: 'industrial', name: 'Industrial', icon: 'ti ti-factory', desc: 'Manufacturing, construction, and logistics', examples: 'UPS, FedEx, Caterpillar' },
+  { id: 'communication', name: 'Communication', icon: 'ti ti-message', desc: 'Telecom and communication services', examples: 'AT&T, T-Mobile, Verizon' },
+];
+
+let selectedIndustries = [];
+let experienceLevel = null;
+let investmentGoal = null;
+
+// Investment goal data
+const INVESTMENT_GOALS = [
+  { id: 'short-term', title: 'Short-term profits', desc: 'I want to see returns within months' },
+  { id: 'long-term', title: 'Long-term growth', desc: 'Building wealth over years' },
+  { id: 'retirement', title: 'Retirement planning', desc: 'Saving for my future retirement' },
+  { id: 'passive', title: 'Passive income', desc: 'Generating regular income from dividends' },
+  { id: 'learning', title: 'Learning to invest', desc: 'I want to learn how investing works' },
+];
+
+// Budget options
+const BUDGET_OPTIONS = [
+  { id: '100-500', title: '$100 - $500', desc: 'Just getting started with a small amount' },
+  { id: '500-1000', title: '$500 - $1,000', desc: 'A moderate starting investment' },
+  { id: '1000-5000', title: '$1,000 - $5,000', desc: 'Ready to build a solid portfolio' },
+  { id: '5000+', title: '$5,000+', desc: 'Significant investment for growth' },
+];
+
+// Timeline options
+const TIMELINE_OPTIONS = [
+  { id: '1-3', title: '1 - 3 years', desc: 'Short-term investment horizon' },
+  { id: '3-5', title: '3 - 5 years', desc: 'Medium-term planning' },
+  { id: '5-10', title: '5 - 10 years', desc: 'Long-term wealth building' },
+  { id: '10+', title: '10+ years', desc: 'Maximum growth over time' },
+];
+
+// Risk tolerance options
+const RISK_TOLERANCE = [
+  { id: 'sell', title: 'Sell everything', desc: 'I would panic and sell to avoid losing more' },
+  { id: 'hold', title: 'Hold and wait', desc: 'I would wait for the market to recover' },
+  { id: 'buy-more', title: 'Buy more', desc: 'I would see it as a buying opportunity' },
+];
+
+function renderGoals() {
+  const container = document.getElementById('goal-options');
+  container.innerHTML = '';
+  INVESTMENT_GOALS.forEach(goal => {
+    const isSelected = investmentGoal === goal.id;
+    const option = document.createElement('div');
+    option.className = 'goal-option' + (isSelected ? ' selected' : '');
+    option.dataset.id = goal.id;
+    option.innerHTML = `
+      <div class="goal-content">
+        <div class="goal-title">${goal.title}</div>
+        <div class="goal-desc">${goal.desc}</div>
+      </div>
+    `;
+    option.addEventListener('click', () => selectGoal(goal.id));
+    container.appendChild(option);
+  });
+}
+
+function selectGoal(id) {
+  investmentGoal = id;
+  renderGoals();
+  
+  const btnNext = document.getElementById('btn-next-goal');
+  btnNext.disabled = false;
+  btnNext.textContent = 'Continue';
+}
+
+function renderBudget() {
+  const container = document.getElementById('budget-options');
+  container.innerHTML = '';
+  BUDGET_OPTIONS.forEach(opt => {
+    const isSelected = investmentBudget === opt.id;
+    const item = document.createElement('div');
+    item.className = 'opt-item' + (isSelected ? ' selected' : '');
+    item.innerHTML = `
+      <div class="opt-title">${opt.title}</div>
+      <div class="opt-desc">${opt.desc}</div>
+    `;
+    item.addEventListener('click', () => selectBudget(opt.id));
+    container.appendChild(item);
+  });
+}
+
+function selectBudget(id) {
+  investmentBudget = id;
+  renderBudget();
+  
+  const btnNext = document.getElementById('btn-next-budget');
+  btnNext.disabled = false;
+  btnNext.textContent = 'Continue';
+}
+
+function renderTimeline() {
+  const container = document.getElementById('timeline-options');
+  container.innerHTML = '';
+  TIMELINE_OPTIONS.forEach(opt => {
+    const isSelected = investmentTimeline === opt.id;
+    const item = document.createElement('div');
+    item.className = 'opt-item' + (isSelected ? ' selected' : '');
+    item.innerHTML = `
+      <div class="opt-title">${opt.title}</div>
+      <div class="opt-desc">${opt.desc}</div>
+    `;
+    item.addEventListener('click', () => selectTimeline(opt.id));
+    container.appendChild(item);
+  });
+}
+
+function selectTimeline(id) {
+  investmentTimeline = id;
+  renderTimeline();
+  
+  const btnNext = document.getElementById('btn-next-timeline');
+  btnNext.disabled = false;
+  btnNext.textContent = 'Continue';
+}
+
+function renderRisk() {
+  const container = document.getElementById('risk-options');
+  container.innerHTML = '';
+  RISK_TOLERANCE.forEach(opt => {
+    const isSelected = riskTolerance === opt.id;
+    const item = document.createElement('div');
+    item.className = 'opt-item' + (isSelected ? ' selected' : '');
+    item.innerHTML = `
+      <div class="opt-title">${opt.title}</div>
+      <div class="opt-desc">${opt.desc}</div>
+    `;
+    item.addEventListener('click', () => selectRisk(opt.id));
+    container.appendChild(item);
+  });
+}
+
+function selectRisk(id) {
+  riskTolerance = id;
+  renderRisk();
+  
+  const btnNext = document.getElementById('btn-next-risk');
+  btnNext.disabled = false;
+  btnNext.textContent = 'Continue';
+}
+
+// Experience level data
+const EXPERIENCE_LEVELS = [
+  { id: 'beginner', label: 'Complete Beginner', desc: 'I have no experience with investing' },
+  { id: 'novice', label: 'Little Experience', desc: 'I know the basics but haven\'t invested before' },
+  { id: 'intermediate', label: 'Some Experience', desc: 'I\'ve made a few investments before' },
+  { id: 'advanced', label: 'Experienced', desc: 'I invest regularly and understand the markets' },
+  { id: 'expert', label: 'Expert', desc: 'I have years of investing experience' },
+];
+
+function renderExperience() {
+  const container = document.getElementById('experience-options');
+  container.innerHTML = '';
+  EXPERIENCE_LEVELS.forEach((level, index) => {
+    const isSelected = experienceLevel === level.id;
+    const option = document.createElement('div');
+    option.className = 'exp-option' + (isSelected ? ' selected' : '');
+    option.dataset.id = level.id;
+    
+    let barsHtml = '';
+    for (let i = 0; i < 5; i++) {
+      const fillLevel = index + 1;
+      const isFilled = i < fillLevel;
+      barsHtml += `<div class="exp-bar" style="${isFilled ? '' : 'opacity: 0.3'}"></div>`;
+    }
+    
+    option.innerHTML = `
+      <div class="exp-chart">${barsHtml}</div>
+      <div class="exp-content">
+        <div class="exp-level">${level.label}</div>
+        <div class="exp-desc">${level.desc}</div>
+      </div>
+    `;
+    option.addEventListener('click', () => selectExperience(level.id));
+    container.appendChild(option);
+  });
+}
+
+function selectExperience(id) {
+  experienceLevel = id;
+  renderExperience();
+  
+  const btnNext = document.getElementById('btn-next-experience');
+  btnNext.disabled = false;
+  btnNext.textContent = 'Continue';
+}
+
+function renderIndustries() {
+  const grid = document.getElementById('industry-grid');
+  grid.innerHTML = '';
+  INDUSTRIES.forEach(ind => {
+    const isSelected = selectedIndustries.includes(ind.id);
+    const card = document.createElement('div');
+    card.className = 'industry-card' + (isSelected ? ' selected' : '');
+    card.dataset.id = ind.id;
+    card.innerHTML = `
+      <i class="${ind.icon} industry-icon"></i>
+      <div class="industry-name">${ind.name}</div>
+      <div class="industry-desc">${ind.desc}</div>
+      <div class="industry-examples">e.g. ${ind.examples}</div>
+    `;
+    card.addEventListener('click', () => toggleIndustry(ind.id));
+    grid.appendChild(card);
+  });
+}
+
+function toggleIndustry(id) {
+  if (selectedIndustries.includes(id)) {
+    selectedIndustries = selectedIndustries.filter(x => x !== id);
+  } else {
+    selectedIndustries.push(id);
+  }
+  updateIndustrySelection();
+}
+
+function updateIndustrySelection() {
+  renderIndustries();
+  const btnNext = document.getElementById('btn-next-survey');
+  const cnt = selectedIndustries.length;
+  if (cnt === 0) {
+    btnNext.disabled = true;
+    btnNext.textContent = 'Select at least 1 industry';
+  } else {
+    btnNext.disabled = false;
+    btnNext.textContent = cnt === 1 ? 'Continue with 1 industry' : `Continue with ${cnt} industries`;
+  }
+}
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+}
+
+// Navigation: Intro -> Step 1
+document.getElementById('btn-start-survey').addEventListener('click', () => {
+  showPage('page-experience');
+});
+
+// Navigation: Step 1 -> Step 2
+document.getElementById('btn-back-experience').addEventListener('click', () => {
+  showPage('page-intro');
+});
+
+document.getElementById('btn-next-experience').addEventListener('click', () => {
+  if (!experienceLevel) return;
+  showPage('page-goal');
+});
+
+// Navigation: Step 2 -> Step 3
+document.getElementById('btn-back-goal').addEventListener('click', () => {
+  showPage('page-experience');
+});
+
+document.getElementById('btn-next-goal').addEventListener('click', () => {
+  if (!investmentGoal) return;
+  showPage('page-budget');
+});
+
+// Navigation: Step 3 -> Step 4
+document.getElementById('btn-back-budget').addEventListener('click', () => {
+  showPage('page-goal');
+});
+
+document.getElementById('btn-next-budget').addEventListener('click', () => {
+  if (!investmentBudget) return;
+  showPage('page-timeline');
+});
+
+// Navigation: Step 4 -> Step 5
+document.getElementById('btn-back-timeline').addEventListener('click', () => {
+  showPage('page-budget');
+});
+
+document.getElementById('btn-next-timeline').addEventListener('click', () => {
+  if (!investmentTimeline) return;
+  showPage('page-risk');
+});
+
+// Navigation: Step 5 -> Step 6
+document.getElementById('btn-back-risk').addEventListener('click', () => {
+  showPage('page-timeline');
+});
+
+document.getElementById('btn-next-risk').addEventListener('click', () => {
+  if (!riskTolerance) return;
+  showPage('page-survey');
+});
+
+// Navigation: Step 6 -> Step 7
+document.getElementById('btn-back-survey').addEventListener('click', () => {
+  showPage('page-risk');
+});
+
+document.getElementById('btn-next-survey').addEventListener('click', () => {
+  if (selectedIndustries.length === 0) return;
+  showPage('page-portfolio');
+  renderGrid();
+  updateStats();
+  updateBudgetDisplay();
+});
+
+// Navigation: Step 7 -> Step 8
+document.getElementById('btn-back-portfolio').addEventListener('click', () => {
+  showPage('page-survey');
+  activeCat = 'recommended';
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.cat-tab[data-cat="recommended"]').classList.add('active');
+  renderGrid();
+});
+
+function getBudgetValue() {
+  switch (investmentBudget) {
+    case '100-500': return 300;
+    case '500-1000': return 750;
+    case '1000-5000': return 2500;
+    case '5000+': return 7500;
+    default: return 1000;
+  }
+}
+
+function updateBudgetDisplay() {
+  const budget = getBudgetValue();
+  document.getElementById('pp-val').textContent = '$' + budget.toLocaleString() + '.00';
+  document.getElementById('pp-sub').textContent = 'Based on $' + budget.toLocaleString() + ' starting investment';
+}
+
+function getFiltered() {
+  let filtered = BRANDS;
+  
+  // For beginners, show only familiar stocks in recommended tab
+  const isBeginner = experienceLevel === 'beginner' || experienceLevel === 'novice';
+  
+  if (activeCat === 'recommended') {
+    const industryMap = {
+      'tech': ['tech'],
+      'healthcare': ['healthcare'],
+      'finance': ['finance'],
+      'consumer': ['consumer'],
+      'energy': ['ev'],
+      'entertainment': ['entertainment'],
+      'realestate': ['realestate'],
+      'industrial': ['industrial'],
+      'communication': ['communication']
+    };
+    
+    const relevantCats = new Set();
+    selectedIndustries.forEach(ind => {
+      const cats = industryMap[ind] || [];
+      cats.forEach(cat => relevantCats.add(cat));
+    });
+    
+    if (relevantCats.size > 0) {
+      filtered = BRANDS.filter(b => relevantCats.has(b.cat));
+    } else {
+      filtered = [];
+    }
+    
+    // For beginners, only show familiar stocks in recommended
+    if (isBeginner) {
+      filtered = filtered.filter(b => b.familiar);
+    }
+  } else if (activeCat !== 'all') {
+    filtered = BRANDS.filter(b => b.cat === activeCat);
+  }
+  
+  if (searchQuery) {
+    const query = searchQuery.toLowerCase();
+    filtered = filtered.filter(b => 
+      b.name.toLowerCase().includes(query) || 
+      b.ticker.toLowerCase().includes(query)
+    );
+  }
+  
+  return filtered.sort((a, b) => (b.marketCap || 0) - (a.marketCap || 0));
+}
+
+function renderGrid() {
+  const grid = document.getElementById('brand-grid');
+  const noResults = document.getElementById('no-results');
+  const filtered = getFiltered();
+  const atMax = selected.length >= MAX;
+  const isBeginner = experienceLevel === 'beginner' || experienceLevel === 'novice';
+  
+  grid.innerHTML = '';
+  
+  if (filtered.length === 0) {
+    noResults.style.display = 'block';
+    document.getElementById('no-results-term').textContent = searchQuery || 'this category';
+  } else {
+    noResults.style.display = 'none';
+    filtered.forEach(b => {
+      const isSelected = selected.includes(b.id);
+      const isPos = b.change.startsWith('+');
+      const isDisabled = !isSelected && atMax;
+      const card = document.createElement('div');
+      card.className = 'brand-card' + (isSelected ? ' selected' : '') + (isDisabled ? ' disabled' : '');
+      card.dataset.id = b.id;
+      
+      let familiarHtml = '';
+      if (isBeginner && b.familiar && activeCat === 'recommended') {
+        familiarHtml = '<div class="brand-familiar">Recognizable brand</div>';
+      }
+      
+      card.innerHTML = `
+        <div class="check-badge"><i class="ti ti-check"></i></div>
+        <div class="brand-logo" style="background:${b.color}">${b.emoji}</div>
+        <div class="brand-name">${b.name}</div>
+        <div class="brand-ticker">${b.ticker}</div>
+        ${familiarHtml}
+        <div class="${isPos ? 'brand-chg-pos' : 'brand-chg-neg'}">${b.change}</div>
+      `;
+      if (!isDisabled) {
+        card.addEventListener('click', () => toggleBrand(b.id));
+      }
+      grid.appendChild(card);
+    });
+  }
+  
+  // Update subtitle for beginners
+  if (isBeginner) {
+    document.getElementById('portfolio-sub').textContent = 'Choose up to 5 well-known companies. We recommend picking brands you use and recognise.';
+  }
+}
+
+function toggleBrand(id) {
+  if (selected.includes(id)) {
+    selected = selected.filter(x => x !== id);
+  } else {
+    if (selected.length >= MAX) return;
+    selected.push(id);
+  }
+  update();
+}
+
+function removeBrand(id) {
+  selected = selected.filter(x => x !== id);
+  update();
+}
+
+function update() {
+  renderGrid();
+  renderPreview();
+  updateStats();
+}
+
+function updateStats() {
+  const cnt = selected.length;
+  document.getElementById('selected-count').textContent = cnt;
+  document.getElementById('prog-fill').style.width = (cnt / MAX * 100) + '%';
+
+  if (cnt === 0) {
+    document.getElementById('prog-label').textContent = 'Pick at least 1 brand to start';
+    document.getElementById('est-return').textContent = '—';
+    document.getElementById('sector-count').textContent = '—';
+  } else {
+    document.getElementById('prog-label').textContent = cnt === MAX ? 'Portfolio full! Ready to invest.' : `${MAX - cnt} more pick${MAX - cnt !== 1 ? 's' : ''} available`;
+    const picks = selected.map(id => BRANDS.find(b => b.id === id));
+    const avgRet = picks.reduce((s, b) => s + b.ret, 0) / picks.length;
+    document.getElementById('est-return').textContent = '+' + avgRet.toFixed(1) + '%';
+    const sectors = new Set(picks.map(b => b.sector));
+    document.getElementById('sector-count').textContent = sectors.size;
+  }
+}
+
+function renderPreview() {
+  const cnt = selected.length;
+  const budget = getBudgetValue();
+  document.getElementById('pp-badge').textContent = cnt + ' / ' + MAX + ' picked';
+
+  const emptyEl = document.getElementById('pp-empty');
+  const listEl = document.getElementById('holding-list');
+  const barEl = document.getElementById('alloc-bar');
+  const btnBuild = document.getElementById('btn-build');
+
+  if (cnt === 0) {
+    emptyEl.style.display = 'block';
+    listEl.style.display = 'none';
+    barEl.style.display = 'none';
+    btnBuild.disabled = true;
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  listEl.style.display = 'flex';
+  barEl.style.display = 'flex';
+
+  const perStock = budget / cnt;
+  const picks = selected.map(id => BRANDS.find(b => b.id === id));
+
+  listEl.innerHTML = '';
+  barEl.innerHTML = '';
+
+  picks.forEach((b, i) => {
+    const isPos = b.change.startsWith('+');
+    const pct = Math.round(100 / cnt);
+    const row = document.createElement('div');
+    row.className = 'hl-row';
+    row.innerHTML = `
+      <div class="hl-left">
+        <div class="hl-logo" style="background:${b.color}">${b.emoji}</div>
+        <div>
+          <div class="hl-name">${b.name}</div>
+          <div class="hl-alloc">${pct}% · ${b.ticker}</div>
+        </div>
+      </div>
+      <div class="hl-right">
+        <div class="hl-val">$${perStock.toFixed(2)}</div>
+        <div class="${isPos ? 'hl-chg-pos' : 'hl-chg-neg'}">${b.change}</div>
+      </div>
+      <button class="hl-remove" data-id="${b.id}" aria-label="Remove ${b.name}"><i class="ti ti-x"></i></button>
+    `;
+    row.querySelector('.hl-remove').addEventListener('click', (e) => {
+      e.stopPropagation();
+      removeBrand(b.id);
+    });
+    listEl.appendChild(row);
+
+    const seg = document.createElement('div');
+    seg.className = 'alloc-segment';
+    seg.style.width = pct + '%';
+    seg.style.background = ALLOC_COLORS[i % ALLOC_COLORS.length];
+    barEl.appendChild(seg);
+  });
+
+  btnBuild.disabled = false;
+}
+
+document.querySelectorAll('.cat-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    activeCat = tab.dataset.cat;
+    renderGrid();
+  });
+});
+
+document.getElementById('btn-build').addEventListener('click', () => {
+  if (selected.length === 0) return;
+  generatePortfolioOptions();
+  showPage('page-options');
+});
+
+// Portfolio options generation
+let selectedPortfolio = null;
+
+function getCompoundingValue(budget, annualReturn, years) {
+  return (budget * Math.pow(1 + annualReturn / 100, years)).toFixed(0);
+}
+
+function generatePortfolioOptions() {
+  const container = document.getElementById('portfolio-options');
+  const picks = selected.map(id => BRANDS.find(b => b.id === id));
+  const avgRet = picks.reduce((s, b) => s + b.ret, 0) / picks.length;
+  const budget = getBudgetValue();
+  
+  // Determine recommended portfolio based on multiple factors
+  let recommendedId = 'medium';
+  
+  // Primary: investment goal
+  if (investmentGoal === 'short-term') {
+    recommendedId = 'low';
+  } else if (investmentGoal === 'long-term') {
+    recommendedId = 'high';
+  } else if (investmentGoal === 'retirement') {
+    recommendedId = 'low';
+  } else if (investmentGoal === 'passive') {
+    recommendedId = 'medium';
+  } else if (investmentGoal === 'learning') {
+    recommendedId = 'low';
+  }
+  
+  // Adjust based on risk tolerance
+  if (riskTolerance === 'sell') {
+    recommendedId = 'low'; // Risk-averse -> low risk
+  } else if (riskTolerance === 'buy-more' && recommendedId !== 'low') {
+    recommendedId = 'high'; // Risk-tolerant -> bump up
+  }
+  
+  // Adjust based on timeline
+  if (investmentTimeline === '1-3') {
+    recommendedId = 'low'; // Short timeline -> low risk
+  } else if (investmentTimeline === '10+' && recommendedId === 'medium') {
+    recommendedId = 'high'; // Long timeline can handle high risk
+  }
+  
+  const portfolios = [
+    {
+      id: 'low',
+      name: 'Low Risk',
+      badge: 'Conservative',
+      badgeClass: 'po-risk-low',
+      desc: 'Stable growth with minimal volatility. Focus on established companies with consistent returns.',
+      multiplier: 0.7,
+      color: '#16a34a',
+      recommended: recommendedId === 'low'
+    },
+    {
+      id: 'medium',
+      name: 'Medium Risk',
+      badge: 'Balanced',
+      badgeClass: 'po-risk-medium',
+      desc: 'Balanced approach with moderate growth potential. Mix of stable and growth stocks.',
+      multiplier: 1.0,
+      color: '#d97706',
+      recommended: recommendedId === 'medium'
+    },
+    {
+      id: 'high',
+      name: 'High Risk',
+      badge: 'Aggressive',
+      badgeClass: 'po-risk-high',
+      desc: 'Maximum growth potential with higher volatility. Focus on high-performing stocks.',
+      multiplier: 1.4,
+      color: '#dc2626',
+      recommended: recommendedId === 'high'
+    }
+  ];
+  
+  container.innerHTML = '';
+  portfolios.forEach(portfolio => {
+    const projectedReturn = avgRet * portfolio.multiplier;
+    const earnings = (budget * projectedReturn / 100).toFixed(2);
+    const totalValue = (budget + parseFloat(earnings)).toFixed(2);
+    const annualReturn = projectedReturn / 100;
+    
+    const card = document.createElement('div');
+    card.className = 'po-card' + (portfolio.recommended ? ' recommended' : '');
+    card.dataset.id = portfolio.id;
+    card.innerHTML = `
+      <div class="po-left">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+          <span class="po-risk-badge ${portfolio.badgeClass}">${portfolio.badge}</span>
+          ${portfolio.recommended ? '<span style="padding: 4px 12px; border-radius: var(--radius-full); background: var(--color-accent); color: #fff; font-size: 11px; font-weight: 600;">Recommended</span>' : ''}
+        </div>
+        <div class="po-name">${portfolio.name}</div>
+        <div class="po-desc">${portfolio.desc}</div>
+        <div class="po-stocks">Includes: ${picks.map(b => b.ticker).join(', ')}</div>
+      </div>
+      <div class="po-right">
+        <div class="po-earnings-label">1Y potential with $${budget.toLocaleString()}</div>
+        <div class="po-earnings-value" style="color: ${portfolio.color}">+$${earnings}</div>
+        <div class="po-earnings-ret">Total: $${totalValue}</div>
+      </div>
+      <div class="po-check"><i class="ti ti-check"></i></div>
+    `;
+    
+    card.addEventListener('click', () => selectPortfolio(portfolio.id));
+    container.appendChild(card);
+  });
+}
+
+function selectPortfolio(id) {
+  selectedPortfolio = id;
+  document.querySelectorAll('.po-card').forEach(card => {
+    card.classList.toggle('selected', card.dataset.id === id);
+  });
+  
+  const btnNext = document.getElementById('btn-next-options');
+  btnNext.disabled = false;
+  btnNext.textContent = 'Continue';
+}
+
+// Portfolio options navigation
+document.getElementById('btn-back-options').addEventListener('click', () => {
+  showPage('page-portfolio');
+  selectedPortfolio = null;
+});
+
+document.getElementById('btn-next-options').addEventListener('click', () => {
+  if (!selectedPortfolio) return;
+  showPage('page-summary');
+});
+
+// Summary page
+function renderSummary() {
+  const container = document.getElementById('summary-content');
+  const picks = selected.map(id => BRANDS.find(b => b.id === id));
+  const budget = getBudgetValue();
+  const avgRet = picks.reduce((s, b) => s + b.ret, 0) / picks.length;
+  
+  // Get selected portfolio data
+  let portfolioData = {};
+  if (selectedPortfolio === 'low') {
+    portfolioData = { name: 'Low Risk', badge: 'Conservative', multiplier: 0.7, color: '#16a34a' };
+  } else if (selectedPortfolio === 'medium') {
+    portfolioData = { name: 'Medium Risk', badge: 'Balanced', multiplier: 1.0, color: '#d97706' };
+  } else {
+    portfolioData = { name: 'High Risk', badge: 'Aggressive', multiplier: 1.4, color: '#dc2626' };
+  }
+  
+  const projectedReturn = avgRet * portfolioData.multiplier;
+  
+  // Get labels
+  const goalLabel = INVESTMENT_GOALS.find(g => g.id === investmentGoal)?.title || '';
+  const budgetLabel = BUDGET_OPTIONS.find(b => b.id === investmentBudget)?.title || '';
+  const timelineLabel = TIMELINE_OPTIONS.find(t => t.id === investmentTimeline)?.title || '';
+  const riskLabel = RISK_TOLERANCE.find(r => r.id === riskTolerance)?.title || '';
+  const experienceLabel = EXPERIENCE_LEVELS.find(e => e.id === experienceLevel)?.label || '';
+  
+  container.innerHTML = `
+    <div class="summary-card">
+      <div class="summary-title">Your Investments</div>
+      <div class="summary-row">
+        <span class="summary-label">Experience</span>
+        <span class="summary-value">${experienceLabel}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Investment Goal</span>
+        <span class="summary-value">${goalLabel}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Budget</span>
+        <span class="summary-value">${budgetLabel}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Timeline</span>
+        <span class="summary-value">${timelineLabel}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Risk Tolerance</span>
+        <span class="summary-value">${riskLabel}</span>
+      </div>
+    </div>
+    
+    <div class="summary-card">
+      <div class="summary-title">Your Portfolio (${picks.length} stocks)</div>
+      <div class="summary-stocks">
+        ${picks.map(b => `<span class="summary-stock-tag">${b.emoji} ${b.ticker}</span>`).join('')}
+      </div>
+    </div>
+    
+    <div class="summary-card">
+      <div class="summary-title">Selected Portfolio</div>
+      <div class="summary-row">
+        <span class="summary-label">Strategy</span>
+        <span class="summary-value" style="color: ${portfolioData.color}">${portfolioData.name} · ${portfolioData.badge}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Investment</span>
+        <span class="summary-value">$${budget.toLocaleString()}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Projected 1Y return</span>
+        <span class="summary-value" style="color: var(--color-green)">+${projectedReturn.toFixed(1)}% → $${getCompoundingValue(budget, projectedReturn, 1)}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Projected 5Y value</span>
+        <span class="summary-value" style="color: var(--color-green)">$${getCompoundingValue(budget, projectedReturn, 5)}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Projected 10Y value</span>
+        <span class="summary-value" style="color: var(--color-green)">$${getCompoundingValue(budget, projectedReturn, 10)}</span>
+      </div>
+    </div>
+    
+    <div style="text-align: center; padding: 16px 0 8px; color: var(--color-text-tertiary); font-size: 12px;">
+      <i class="ti ti-info-circle" style="font-size: 14px; vertical-align: middle; margin-right: 4px;"></i>
+      Projections are estimates based on historical performance. Actual returns may vary.
+    </div>
+  `;
+}
+
+// Summary navigation
+document.getElementById('btn-back-summary').addEventListener('click', () => {
+  showPage('page-options');
+});
+
+document.getElementById('btn-next-summary').addEventListener('click', () => {
+  showPage('page-signup');
+});
+
+// Search functionality
+const searchInput = document.getElementById('search-input');
+const searchClear = document.getElementById('search-clear');
+
+searchInput.addEventListener('input', (e) => {
+  searchQuery = e.target.value.trim();
+  searchClear.classList.toggle('show', searchQuery.length > 0);
+  renderGrid();
+});
+
+searchClear.addEventListener('click', () => {
+  searchQuery = '';
+  searchInput.value = '';
+  searchClear.classList.remove('show');
+  renderGrid();
+  searchInput.focus();
+});
+
+renderGrid();
+update();
+renderIndustries();
+updateIndustrySelection();
+renderExperience();
+renderGoals();
+renderBudget();
+renderTimeline();
+renderRisk();
+</script>
+
+</body>
+</html>
