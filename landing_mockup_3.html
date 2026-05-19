@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InvestWhat — See How Much You Can Make</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --indigo: #4f46e5;
+      --indigo-light: #6366f1;
+      --indigo-pale: #4f46e5;
+      --indigo-glow: rgba(79,70,229,0.15);
+
+      /* Light surfaces */
+      --light:  #f9f8f6;
+      --light2: #f2f0ec;
+      --light3: #eae7e1;
+      --light4: #e0dcd4;
+
+      /* Dark surfaces — kept for cards and data components */
+      --dark:  #0f1225;
+      --dark2: #141728;
+      --dark3: #1a1f35;
+      --dark4: #222840;
+
+      /* Borders */
+      --border: rgba(0,0,0,0.07);
+      --border-bright: rgba(0,0,0,0.12);
+      --border-dark: rgba(255,255,255,0.08);
+
+      /* Text on light backgrounds */
+      --text: #0f1225;
+      --text-dim: rgba(15,18,37,0.55);
+      --text-faint: rgba(15,18,37,0.32);
+
+      /* Text on dark backgrounds */
+      --text-on-dark: #ffffff;
+      --text-on-dark-dim: rgba(255,255,255,0.55);
+      --text-on-dark-faint: rgba(255,255,255,0.25);
+
+      /* Signal colours — unchanged */
+      --gain: #059669;
+      --gain-bg: rgba(5,150,105,0.1);
+      --red: #dc2626;
+      --red-bg: rgba(220,38,38,0.1);
+      --amber: #d97706;
+      --amber-bg: rgba(217,119,6,0.1);
+      --radius: 16px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* ─────────── NAV ─────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 64px;
+      background: rgba(249,248,246,0.92);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; letter-spacing: -0.4px; }
+    .nav-links { display: flex; gap: 32px; list-style: none; font-size: 14px; color: var(--text-dim); }
+    .nav-links a { color: inherit; text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .btn-ghost { background: none; border: none; color: var(--text-dim); font-size: 14px; cursor: pointer; padding: 8px 16px; border-radius: 8px; transition: all 0.2s; }
+    .btn-ghost:hover { color: var(--text); background: var(--light3); }
+    .btn-pill {
+      background: var(--indigo); color: #fff; border: none;
+      border-radius: 50px; padding: 10px 22px;
+      font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-pill:hover { background: var(--indigo-light); box-shadow: 0 4px 20px var(--indigo-glow); }
+
+    /* ─────────── HERO ─────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 120px 32px 80px;
+      text-align: center;
+      position: relative;
+      background:
+        radial-gradient(ellipse 90% 55% at 50% -10%, rgba(79,70,229,0.08) 0%, transparent 65%),
+        var(--light);
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #ffffff;
+      border: 1px solid var(--border-bright);
+      border-radius: 50px; padding: 6px 16px 6px 10px;
+      font-size: 13px; color: var(--text-dim); margin-bottom: 40px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .hero-eyebrow .pulse {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--gain);
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+    .hero-h1 {
+      font-size: clamp(44px, 7vw, 80px);
+      font-weight: 900;
+      letter-spacing: -4px;
+      line-height: 0.95;
+      margin-bottom: 32px;
+      max-width: 880px;
+    }
+    .hero-h1 em { font-style: normal; color: var(--indigo-pale); }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--text-dim);
+      max-width: 480px;
+      margin: 0 auto 48px;
+      line-height: 1.6;
+    }
+
+    .hero-ctas {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 12px;
+      flex-wrap: wrap; margin-bottom: 80px;
+      width: 100%; max-width: 520px;
+    }
+    .hero-email-row {
+      display: flex; gap: 0; align-items: center;
+      background: #ffffff;
+      border: 1px solid var(--border-bright);
+      border-radius: 50px; padding: 6px 6px 6px 20px;
+      width: 100%; max-width: 480px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .hero-email-input {
+      flex: 1; background: transparent; border: none;
+      font-size: 15px; color: var(--text); outline: none;
+      min-width: 0;
+    }
+    .hero-email-input::placeholder { color: var(--text-faint); }
+    .hero-email-row .btn-hero {
+      padding: 12px 24px; font-size: 14px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .btn-hero {
+      padding: 18px 40px; font-size: 16px; font-weight: 700;
+      border-radius: 50px; border: none; cursor: pointer; transition: all 0.25s;
+    }
+    .btn-hero-primary { background: var(--indigo); color: #fff; }
+    .btn-hero-primary:hover { background: var(--indigo-light); transform: translateY(-2px); box-shadow: 0 12px 40px var(--indigo-glow); }
+    .btn-hero-ghost {
+      background: transparent; color: var(--text-dim);
+      border: 1px solid var(--border-bright);
+    }
+    .btn-hero-ghost:hover { color: var(--text); border-color: var(--border-bright); background: var(--light3); }
+
+    .hero-reassurance { font-size: 13px; color: var(--text-faint); }
+    .hero-reassurance span { color: var(--text-dim); }
+    .hero-trust-row {
+      display: flex; align-items: center; gap: 12px;
+      flex-wrap: wrap; justify-content: center;
+      margin-top: 8px;
+    }
+    .hero-trust-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--text-faint);
+    }
+    .hero-trust-icon { font-size: 13px; }
+    .hero-trust-sep { color: var(--text-faint); font-size: 13px; }
+
+    /* ── LIVE PORTFOLIO CARD (hero visual) ── */
+    .hero-card-wrap {
+      width: 100%; max-width: 720px;
+      perspective: 1200px;
+    }
+    .hero-card {
+      background: var(--dark2);
+      border: 1px solid var(--border-bright);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(99,102,241,0.15),
+        0 40px 100px rgba(0,0,0,0.7),
+        0 0 80px rgba(99,102,241,0.07);
+    }
+    .card-topbar {
+      background: var(--dark3); border-bottom: 1px solid var(--border);
+      padding: 14px 24px; display: flex; align-items: center; gap: 8px;
+    }
+    .mac-dot { width: 11px; height: 11px; border-radius: 50%; }
+    .card-topbar-label { flex: 1; text-align: center; font-size: 12px; color: var(--text-faint); }
+    .card-body { padding: 32px; }
+
+    .card-portfolio-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .card-port-name { font-size: 13px; color: var(--text-dim); font-weight: 500; }
+    .card-live-badge {
+      display: flex; align-items: center; gap: 5px;
+      background: var(--gain-bg); border: 1px solid rgba(52,211,153,0.2);
+      border-radius: 50px; padding: 3px 10px; font-size: 11px; font-weight: 600; color: var(--gain);
+    }
+    .card-live-badge .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gain); animation: blink 1.5s infinite; }
+
+    .card-value { font-size: 48px; font-weight: 900; letter-spacing: -2px; line-height: 1; margin-bottom: 6px; }
+    .card-gain-row { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+    .card-gain-pill {
+      background: var(--gain-bg); color: var(--gain);
+      border-radius: 50px; padding: 4px 12px; font-size: 13px; font-weight: 700;
+    }
+    .card-gain-sub { font-size: 13px; color: var(--text-dim); }
+
+    /* sparkline */
+    svg.hero-spark { width: 100%; height: 88px; display: block; margin-bottom: 24px; }
+
+    .time-pills { display: flex; gap: 4px; margin-bottom: 28px; }
+    .tp {
+      padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 500;
+      color: var(--text-faint); border: none; background: none; cursor: pointer;
+    }
+    .tp.on { background: var(--dark4); color: var(--text); font-weight: 700; }
+
+    .card-holdings { display: flex; flex-direction: column; gap: 8px; }
+    .holding {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 14px; padding: 12px 16px;
+    }
+    .h-icon { font-size: 24px; width: 36px; text-align: center; }
+    .h-mid { flex: 1; }
+    .h-name { font-size: 14px; font-weight: 600; }
+    .h-weight { font-size: 12px; color: var(--text-dim); }
+    .h-bar-track { height: 3px; background: var(--dark4); border-radius: 2px; margin-top: 5px; width: 100%; }
+    .h-bar-fill { height: 3px; background: var(--indigo); border-radius: 2px; }
+    .h-right { text-align: right; }
+    .h-val { font-size: 14px; font-weight: 700; }
+    .h-chg { font-size: 12px; font-weight: 600; }
+    .g { color: var(--gain); }
+    .r { color: var(--red); }
+
+    /* ─────────── TICKER ─────────── */
+    .ticker {
+      background: var(--dark);
+      border-top: none;
+      border-bottom: none;
+      padding: 13px 0; overflow: hidden;
+    }
+    .ticker-track {
+      display: flex; gap: 52px; width: max-content;
+      animation: tick 28s linear infinite;
+    }
+    @keyframes tick { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    .t-item { display: flex; align-items: center; gap: 8px; font-size: 13px; white-space: nowrap; }
+    .t-sym { font-weight: 700; color: #ffffff; }
+    .t-price { color: rgba(255,255,255,0.55); }
+    .t-up { color: #34d399; font-weight: 600; }
+    .t-dn { color: #f87171;  font-weight: 600; }
+
+    /* ─────────── WHAT-IF STRIP ─────────── */
+    .whatif {
+      background: var(--light);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 64px 48px;
+      text-align: center;
+    }
+    .whatif-label { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--indigo); margin-bottom: 16px; }
+    .whatif-h2 {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 900; letter-spacing: -2px; line-height: 1.05;
+      margin-bottom: 16px;
+    }
+    .whatif-h2 em { font-style: normal; color: var(--gain); }
+    .whatif-sub { font-size: 17px; color: var(--text-dim); max-width: 520px; margin: 0 auto 48px; }
+
+    .whatif-cards { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .wc {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 28px 32px; min-width: 200px; text-align: left;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .wc:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+    .wc-icon { display: flex; gap: 6px; align-items: center; margin-bottom: 16px; }
+    .wc-logo { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+    .wc-logo svg { width: 20px; height: 20px; }
+    .wc-then { font-size: 12px; color: var(--text-faint); margin-bottom: 4px; }
+    .wc-invested { font-size: 15px; font-weight: 700; margin-bottom: 16px; color: var(--text); }
+    .wc-arrow { font-size: 11px; color: var(--text-faint); margin-bottom: 4px; }
+    .wc-now-label { font-size: 12px; color: var(--text-dim); }
+    .wc-now { font-size: 28px; font-weight: 900; letter-spacing: -1px; color: var(--gain); }
+    .wc-pct { font-size: 13px; font-weight: 700; color: var(--gain); margin-top: 4px; }
+
+    /* ─────────── HOW IT WORKS ─────────── */
+    .hiw { padding: 64px 48px; }
+    .section-label { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--indigo); margin-bottom: 16px; }
+    .section-h2 { font-size: clamp(32px, 4vw, 52px); font-weight: 900; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 14px; }
+    .section-sub { font-size: 17px; color: var(--text-dim); max-width: 520px; margin-bottom: 56px; line-height: 1.6; }
+
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; border-radius: 0; overflow: visible; border: none; background: transparent; }
+    .step { background: #ffffff; border: 1px solid var(--border); border-radius: 20px; padding: 40px 36px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+    .step-num { font-size: 11px; font-weight: 800; letter-spacing: 2px; color: var(--indigo); text-transform: uppercase; margin-bottom: 20px; }
+    .step-icon { font-size: 36px; margin-bottom: 16px; }
+    .step h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+    .step p { font-size: 14px; color: var(--text-dim); line-height: 1.65; }
+
+    /* ─────────── ONBOARDING DEMO ─────────── */
+    .onboarding-section { background: var(--light2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .onboarding-inner { max-width: 1200px; margin: 0 auto; padding: 64px 48px; }
+
+    .ob-flow {
+      background: var(--dark3); border: 1px solid var(--border-bright);
+      border-radius: 24px; overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    }
+    .ob-topbar {
+      background: var(--dark4); border-bottom: 1px solid var(--border);
+      padding: 16px 24px; display: flex; align-items: center; gap: 16px;
+    }
+    .ob-steps-nav { display: flex; gap: 0; flex: 1; justify-content: center; }
+    .ob-step-pip {
+      display: flex; align-items: center; gap: 6px; font-size: 12px;
+      color: var(--text-faint); padding: 6px 14px;
+    }
+    .ob-step-pip.done { color: var(--gain); }
+    .ob-step-pip.active { color: var(--text); font-weight: 700; }
+    .ob-step-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 1.5px solid currentColor;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700;
+    }
+    .ob-step-pip.done .ob-step-num { background: var(--gain); border-color: var(--gain); color: #000; }
+    .ob-step-pip.active .ob-step-num { background: var(--indigo); border-color: var(--indigo); color: #fff; }
+    .ob-step-sep { color: var(--text-faint); font-size: 12px; }
+
+    .ob-body { padding: 40px; }
+
+    /* step 1: brands */
+    .ob-heading { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .ob-sub { font-size: 14px; color: var(--text-dim); margin-bottom: 28px; }
+
+    .brand-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-bottom: 20px; }
+    .bc {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 14px 8px; background: var(--dark4);
+      border: 1.5px solid var(--border); border-radius: 14px;
+      cursor: pointer; font-size: 11px; color: var(--text-dim);
+      transition: all 0.18s; text-align: center; user-select: none;
+    }
+    .bc-icon { font-size: 26px; }
+    .bc.sel { border-color: var(--indigo); background: rgba(99,102,241,0.12); color: var(--text); }
+    .bc.sel::after { content: '✓'; font-size: 9px; color: var(--indigo-pale); font-weight: 800; }
+    .ob-select-count { font-size: 13px; color: var(--text-dim); margin-bottom: 20px; }
+    .ob-select-count strong { color: var(--indigo-pale); }
+
+    /* sector pills */
+    .sector-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+    .sector-pill {
+      padding: 8px 18px; border-radius: 50px; font-size: 13px; font-weight: 600;
+      border: 1.5px solid var(--border-bright); color: var(--text-dim);
+      background: var(--dark4); cursor: pointer; transition: all 0.18s;
+    }
+    .sector-pill.sel { background: rgba(99,102,241,0.15); border-color: var(--indigo); color: var(--text); }
+
+    /* generated portfolio cards */
+    .gen-portfolios { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .gp {
+      background: var(--dark4); border: 1.5px solid var(--border);
+      border-radius: 18px; padding: 24px; cursor: pointer; transition: all 0.2s;
+      position: relative;
+    }
+    .gp:hover, .gp.picked { border-color: var(--indigo); box-shadow: 0 0 0 1px var(--indigo); }
+    .gp.picked { background: rgba(99,102,241,0.08); }
+    .gp-badge {
+      position: absolute; top: -10px; right: 16px;
+      background: var(--indigo); color: #fff;
+      font-size: 10px; font-weight: 800; letter-spacing: 1px;
+      padding: 3px 10px; border-radius: 50px;
+    }
+    .gp-name { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+    .gp-desc { font-size: 12px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.5; }
+    .gp-return { font-size: 24px; font-weight: 900; color: var(--gain); letter-spacing: -1px; }
+    .gp-return-label { font-size: 11px; color: var(--text-faint); margin-bottom: 8px; }
+    .gp-tickers { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+    .gp-ticker {
+      font-size: 10px; padding: 2px 8px;
+      background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 4px; color: var(--text-dim); font-weight: 600;
+    }
+
+    .ob-next-row { display: flex; justify-content: flex-end; margin-top: 28px; }
+    .ob-next {
+      background: var(--indigo); color: #fff; border: none;
+      border-radius: 50px; padding: 12px 32px;
+      font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .ob-next:hover { background: var(--indigo-light); }
+
+    /* ─────────── PORTFOLIOS SECTION ─────────── */
+    .ports-section { max-width: 1200px; margin: 0 auto; padding: 48px 48px 96px; background: var(--light2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); max-width: 100%; }
+    .ports-section > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
+    .ports-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .port-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 28px;
+      display: flex; flex-direction: column; gap: 0;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .port-card::before { display: none; }
+    .port-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+    }
+    .pc-emoji { font-size: 34px; margin-bottom: 14px; }
+    .pc-name { font-size: 17px; font-weight: 800; margin-bottom: 6px; }
+    .pc-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 18px; line-height: 1.55; }
+    .pc-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+    .pc-tag {
+      font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 50px;
+      background: var(--light3);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+    .pc-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--border); }
+    .pc-ret-label { font-size: 12px; color: var(--text-faint); margin-bottom: 2px; }
+    .pc-ret { font-size: 22px; font-weight: 900; color: var(--indigo); letter-spacing: -0.5px; }
+    .mini-bars { display: flex; align-items: flex-end; gap: 3px; height: 28px; }
+    .mb { width: 5px; border-radius: 2px; background: var(--indigo); opacity: 0.65; }
+
+    .port-rank { font-size: 13px; font-weight: 800; color: var(--text-faint); margin-bottom: 6px; }
+    .port-return-pct { font-size: 28px; font-weight: 900; color: var(--gain); letter-spacing: -1px; }
+    .port-return-label { font-size: 12px; color: var(--text-faint); margin-bottom: 4px; }
+    .port-stats-row { display: flex; gap: 24px; margin: 16px 0 12px; }
+    .port-stat-label { font-size: 11px; color: var(--text-faint); }
+    .port-stat-val { font-size: 14px; font-weight: 700; }
+    .port-author { font-size: 12px; color: var(--text-faint); margin-top: 12px; }
+    .filter-pills-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+    .filter-pill {
+      padding: 6px 16px; border-radius: 50px; font-size: 12px;
+      font-weight: 500; cursor: pointer;
+      border: 1px solid var(--border-bright);
+      background: #ffffff; color: var(--text-dim);
+      transition: all 0.18s;
+      text-transform: none;
+    }
+    .filter-pill:hover { border-color: var(--indigo); color: var(--indigo); }
+    .filter-pill.active { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+
+    /* ─────────── SIMULATOR ─────────── */
+    .sim-section { background: var(--light); border-top: 1px solid var(--border); }
+    .sim-inner { max-width: 1200px; margin: 0 auto; padding: 96px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .sim-left { }
+    .sim-left h2 { font-size: clamp(30px, 3.5vw, 46px); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 16px; color: var(--text); }
+    .sim-left p { font-size: 16px; color: var(--text-dim); margin-bottom: 32px; line-height: 1.65; }
+    .sim-features { display: flex; flex-direction: column; gap: 16px; margin-bottom: 36px; }
+    .sim-feat { display: flex; align-items: flex-start; gap: 14px; padding: 16px; background: #ffffff; border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .sim-feat-icon { font-size: 22px; margin-top: 2px; }
+    .sim-feat-title { font-size: 15px; font-weight: 700; margin-bottom: 2px; color: var(--text); }
+    .sim-feat-desc { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+
+    .sim-card {
+      background: #ffffff; border: 1px solid var(--border);
+      border-radius: 24px; padding: 32px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .sim-card-label { font-size: 12px; color: var(--text-dim); margin-bottom: 6px; }
+    .sim-card-amount { font-size: 48px; font-weight: 900; letter-spacing: -2px; color: var(--text); margin-bottom: 4px; }
+    .sim-card-sub { font-size: 12px; color: var(--text-faint); margin-top: 4px; }
+    .sim-unlock {
+      background: var(--light2); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px; text-align: center;
+      font-size: 13px; color: var(--text-dim); line-height: 1.6; margin-top: 20px;
+    }
+    .sim-unlock a { color: var(--indigo); font-weight: 600; text-decoration: none; }
+    .sim-unlock strong { color: var(--text); }
+    .sim-pills-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 16px; }
+    .sim-pill { display: inline-flex; align-items: center; gap: 5px; background: var(--light2); border: 1px solid var(--border-bright); border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700; color: var(--text); }
+    .sim-pill span { color: var(--text-faint); font-weight: 400; }
+    .sim-metrics { display: flex; gap: 0; margin: 16px 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .sim-metric { flex: 1; padding: 12px 16px; background: var(--light2); text-align: center; }
+    .sim-metric + .sim-metric { border-left: 1px solid var(--border); }
+    .sim-metric-label { font-size: 11px; color: var(--text-faint); margin-bottom: 4px; }
+    .sim-metric-val { font-size: 18px; font-weight: 900; letter-spacing: -0.5px; }
+    .sim-metric-note { font-size: 10px; color: var(--gain); margin-top: 3px; }
+
+    /* ─────────── AI CHATBOT ─────────── */
+    .ai-section-wrap { background: var(--dark2); border-top: 4px solid var(--indigo); }
+    .ai-section { max-width: 1200px; margin: 0 auto; padding: 96px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .ai-left h2 { font-size: clamp(30px, 3.5vw, 46px); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 16px; color: var(--text-on-dark); }
+    .ai-left p { font-size: 16px; color: var(--text-on-dark-dim); margin-bottom: 32px; line-height: 1.65; }
+    .ai-prompts { display: flex; flex-direction: column; gap: 8px; }
+    .ai-prompt {
+      background: var(--dark3); border: 1px solid var(--border-dark);
+      border-radius: 12px; padding: 12px 16px; font-size: 14px; color: var(--text-on-dark-dim);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .ai-prompt:hover { border-color: rgba(79,70,229,0.5); color: var(--text-on-dark); background: rgba(79,70,229,0.1); }
+    .ai-section-wrap .section-label { color: #a5b4fc; }
+
+    .ai-chat {
+      background: var(--dark2); border: 1px solid var(--border-bright);
+      border-radius: 24px; overflow: hidden;
+    }
+    .ai-chat-header {
+      background: var(--dark3); border-bottom: 1px solid var(--border);
+      padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+    }
+    .ai-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--indigo), #8b5cf6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .ai-name { font-size: 14px; font-weight: 700; }
+    .ai-tagline { font-size: 12px; color: var(--text-dim); }
+    .ai-online { width: 8px; height: 8px; border-radius: 50%; background: var(--gain); margin-left: auto; }
+
+    .ai-msgs { padding: 20px; display: flex; flex-direction: column; gap: 14px; min-height: 240px; }
+    .msg-bubble {
+      max-width: 80%; padding: 12px 16px; border-radius: 16px;
+      font-size: 14px; line-height: 1.55;
+    }
+    .msg-ai { background: var(--dark3); border: 1px solid var(--border); border-radius: 16px 16px 16px 4px; color: var(--text-dim); }
+    .msg-user {
+      background: var(--indigo); color: #fff; margin-left: auto;
+      border-radius: 16px 16px 4px 16px;
+    }
+    .msg-ai strong { color: var(--text); }
+    .msg-ai .ai-result { margin-top: 10px; background: var(--dark4); border-radius: 10px; padding: 12px; font-size: 13px; }
+    .msg-ai .ai-result .r-name { font-weight: 800; font-size: 14px; margin-bottom: 4px; }
+    .msg-ai .ai-result .r-ret { color: var(--gain); font-weight: 700; }
+
+    .ai-input-row {
+      border-top: 1px solid var(--border); padding: 14px 16px;
+      display: flex; gap: 10px; align-items: center;
+    }
+    .ai-input {
+      flex: 1; background: var(--dark3); border: 1px solid var(--border);
+      border-radius: 50px; padding: 10px 18px; font-size: 14px; color: var(--text);
+      outline: none;
+    }
+    .ai-input::placeholder { color: var(--text-faint); }
+    .ai-send {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--indigo); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 16px; transition: all 0.2s;
+    }
+    .ai-send:hover { background: var(--indigo-light); }
+
+    /* ─────────── FLIP CARDS ─────────── */
+    .ports-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    .flip-card { height: 420px; perspective: 1200px; cursor: pointer; }
+    .flip-card-inner {
+      position: relative; width: 100%; height: 100%;
+      transition: transform 0.55s cubic-bezier(.4,0,.2,1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+    .flip-front, .flip-back {
+      position: absolute; inset: 0;
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+      border-radius: 20px; overflow: hidden;
+    }
+    .flip-front {
+      background: #ffffff; border: 1px solid var(--border);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      padding: 28px; display: flex; flex-direction: column;
+    }
+    .flip-back {
+      background: var(--dark2); border: 1px solid var(--border-dark);
+      transform: rotateY(180deg);
+      padding: 28px; display: flex; flex-direction: column;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+    .flip-hint {
+      font-size: 11px; color: var(--text-faint); margin-top: auto; padding-top: 12px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .flip-hint-icon { font-size: 13px; }
+    .flip-back-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+    .flip-back-name { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .flip-back-period { font-size: 12px; color: rgba(255,255,255,0.45); margin-bottom: 16px; }
+    .flip-holdings { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .flip-holding-row { display: flex; align-items: center; gap: 8px; }
+    .flip-holding-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.85); width: 80px; flex-shrink: 0; }
+    .flip-holding-bar-track { flex: 1; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; }
+    .flip-holding-bar { height: 4px; background: var(--indigo-light); border-radius: 2px; }
+    .flip-holding-pct { font-size: 11px; color: rgba(255,255,255,0.45); width: 36px; text-align: right; flex-shrink: 0; }
+    .flip-perf-row { display: flex; gap: 12px; margin-bottom: 16px; }
+    .flip-perf-cell { flex: 1; background: rgba(255,255,255,0.05); border-radius: 10px; padding: 10px 12px; }
+    .flip-perf-label { font-size: 10px; color: rgba(255,255,255,0.4); margin-bottom: 3px; }
+    .flip-perf-val { font-size: 16px; font-weight: 800; color: #34d399; }
+    .flip-analysis-btn {
+      margin-top: auto; width: 100%; padding: 12px; border-radius: 10px;
+      background: var(--indigo); color: #fff; border: none;
+      font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s;
+    }
+    .flip-analysis-btn:hover { background: var(--indigo-light); }
+
+    /* Trump card special styling */
+    .flip-front.trump-card {
+      background: linear-gradient(135deg, #1a0a0a 0%, #2d0f0f 100%);
+      border: 1px solid rgba(220,38,38,0.3);
+    }
+    .trump-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(220,38,38,0.15); border: 1px solid rgba(220,38,38,0.3);
+      border-radius: 50px; padding: 3px 10px;
+      font-size: 11px; font-weight: 700; color: #f87171;
+      margin-bottom: 10px;
+    }
+    .trump-return { font-size: 28px; font-weight: 900; color: #f87171; letter-spacing: -1px; }
+
+    /* ─────────── COMPARISON TABLE ─────────── */
+    .compare-section {
+      padding: 64px 48px;
+      background: var(--light2);
+      border-top: 1px solid var(--border);
+    }
+    .compare-inner {
+      max-width: 900px; margin: 0 auto;
+    }
+    .compare-table {
+      width: 100%;
+      border: 1px solid var(--border-bright);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 40px;
+      background: #ffffff;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .compare-header-row {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 1.2fr 1.2fr;
+      background: var(--light3);
+      border-bottom: 1px solid var(--border-bright);
+    }
+    .compare-col-head {
+      padding: 16px 20px;
+      font-size: 13px; font-weight: 700;
+      color: var(--text-dim); text-align: center;
+      border-left: 1px solid var(--border);
+    }
+    .compare-col-us {
+      color: var(--indigo) !important;
+      background: rgba(79,70,229,0.06);
+    }
+    .compare-col-label { padding: 16px 20px; font-size: 13px; }
+    .compare-row {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 1.2fr 1.2fr;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    .compare-row:last-child { border-bottom: none; }
+    .compare-row:hover { background: var(--light); }
+    .compare-col-label {
+      padding: 14px 20px;
+      font-size: 13px; color: var(--text-dim);
+      display: flex; align-items: center;
+    }
+    .compare-cell {
+      padding: 14px 20px;
+      font-size: 13px; font-weight: 600;
+      text-align: center;
+      border-left: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .compare-yes {
+      color: var(--gain);
+      background: rgba(5,150,105,0.04);
+    }
+    .compare-no { color: var(--text-faint); }
+
+    /* ─────────── STATS / SOCIAL PROOF ─────────── */
+    .proof-section { background: var(--light); border-top: 1px solid var(--border); }
+    .proof-inner { max-width: 1200px; margin: 0 auto; padding: 64px 48px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border-radius: 20px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 72px; }
+    .stat-cell { background: #ffffff; padding: 36px 24px; text-align: center; }
+    .stat-num { font-size: 40px; font-weight: 900; letter-spacing: -1.5px; color: var(--text); }
+    .stat-label { font-size: 13px; color: var(--text-dim); margin-top: 6px; }
+
+    .testimonials { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .testi {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 18px; padding: 26px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .testi-stars { color: #fbbf24; font-size: 13px; letter-spacing: 1px; margin-bottom: 12px; }
+    .testi-q { font-size: 14px; color: var(--text-dim); line-height: 1.65; margin-bottom: 18px; }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-av {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--dark4), #2d2f5e);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 800; color: #ffffff;
+    }
+    .testi-name { font-size: 13px; font-weight: 700; color: var(--text); }
+    .testi-handle { font-size: 12px; color: var(--text-faint); }
+    .testi-objection {
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--indigo);
+      background: rgba(79,70,229,0.07); border: 1px solid rgba(79,70,229,0.15);
+      border-radius: 50px; padding: 4px 12px; display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    /* ─────────── APP TRUST BAR ─────────── */
+    .app-trust-bar {
+      display: flex; align-items: center; justify-content: center;
+      gap: 40px; flex-wrap: wrap;
+      padding: 32px 0; margin-bottom: 56px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--light2);
+      box-shadow: none;
+    }
+    .app-trust-item {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .app-trust-val {
+      font-size: 14px; font-weight: 700; color: var(--text);
+    }
+    .app-trust-sub {
+      font-size: 12px; color: var(--text-faint); margin-top: 2px;
+    }
+    .app-trust-divider {
+      width: 1px; height: 40px;
+      background: var(--border-bright);
+    }
+
+    /* ─────────── FINAL CTA ─────────── */
+    .final {
+      text-align: center; padding: 80px 48px;
+      background: var(--dark);
+      border-top: none;
+    }
+    .final h2 { font-size: clamp(40px, 6vw, 76px); font-weight: 900; letter-spacing: -3px; line-height: 1; margin-bottom: 16px; color: var(--text-on-dark); }
+    .final p { font-size: 18px; color: var(--text-on-dark-dim); max-width: 420px; margin: 0 auto 40px; }
+    .final-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+    .final-note { font-size: 13px; color: var(--text-on-dark-faint); }
+    .final-note span { color: var(--text-on-dark-dim); }
+
+    /* ─────────── FOOTER ─────────── */
+    footer { background: var(--dark2); border-top: 1px solid var(--border-dark); padding: 64px 48px 32px; }
+    .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .footer-brand p { font-size: 13px; color: var(--text-on-dark-dim); margin-top: 14px; max-width: 260px; line-height: 1.65; }
+    .footer-col h4 { font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--text-on-dark-faint); margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: var(--text-on-dark-dim); text-decoration: none; transition: color 0.2s; }
+    .footer-col ul a:hover { color: var(--text-on-dark); }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding-top: 24px; border-top: 1px solid var(--border-dark); display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--text-on-dark-faint); }
+    .disclaimer { max-width: 1200px; margin: 20px auto 0; font-size: 11px; color: var(--text-on-dark-faint); line-height: 1.6; }
+
+    /* ─────────── RESPONSIVE ─────────── */
+    @media (max-width: 960px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 24px 60px; }
+      .hiw, .ports-section, .ai-section { padding: 64px 24px; }
+      .steps, .ports-grid, .gen-portfolios, .testimonials, .stats-grid { grid-template-columns: 1fr; }
+      .sim-inner, .ai-section { grid-template-columns: 1fr; gap: 48px; }
+      .onboarding-inner { padding: 64px 24px; }
+      .brand-grid { grid-template-columns: repeat(4, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .whatif-cards { flex-direction: column; align-items: center; }
+    }
+    .tip { font-size: 10px; color: var(--text-faint); cursor: help; vertical-align: middle; }
+    .filter-pill { text-transform: none; }
+    .filter-pill-more {
+      padding: 6px 16px; border-radius: 50px; font-size: 12px;
+      border: 1px dashed var(--border-bright); color: var(--indigo);
+      background: transparent; cursor: pointer; transition: all 0.2s;
+    }
+    .filter-pill-more:hover { border-color: var(--indigo); }
+    .step-hint {
+      display: inline-block; margin-top: 16px;
+      font-size: 12px; font-weight: 700; color: var(--indigo);
+      background: rgba(79,70,229,0.07);
+      border: 1px solid rgba(79,70,229,0.18);
+      border-radius: 50px; padding: 5px 14px;
+    }
+    .sim-pill-active {
+      border-color: var(--indigo) !important;
+      background: rgba(79,70,229,0.2) !important;
+      cursor: pointer;
+    }
+    .sim-pill-active:hover { opacity: 0.75; }
+    .sim-pill-selected {
+      border-color: var(--gain) !important;
+      background: rgba(52,211,153,0.1) !important;
+    }
+    .sim-swap-row { margin-bottom: 12px; }
+    .sim-swap-chip {
+      padding: 5px 14px; border-radius: 50px; font-size: 12px;
+      font-weight: 600; cursor: pointer;
+      background: var(--dark3); border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.7); transition: all 0.15s;
+    }
+    .sim-swap-chip:hover { border-color: var(--gain); color: var(--gain); }
+    .final-note-hero { font-size: 18px; color: var(--text-on-dark-dim); margin-bottom: 32px; font-style: italic; }
+
+    /* ─────────── MONEY VISUALISER ─────────── */
+    .money-vis-section { background: var(--light2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 72px 48px; }
+    .money-vis-inner { max-width: 900px; margin: 0 auto; }
+    .money-stat-strip {
+      display: flex; align-items: center; gap: 0;
+      background: var(--dark); border-radius: 16px;
+      margin-bottom: 40px; overflow: hidden;
+    }
+    .money-stat-item { flex: 1; padding: 28px 24px; text-align: center; }
+    .money-stat-num { font-size: 36px; font-weight: 900; letter-spacing: -1.5px; color: #fff; }
+    .money-stat-label { font-size: 13px; color: rgba(255,255,255,0.55); margin-top: 4px; line-height: 1.45; }
+    .money-stat-src { font-size: 10px; color: rgba(255,255,255,0.22); margin-top: 6px; }
+    .money-stat-div { width: 1px; height: 60px; background: rgba(255,255,255,0.08); flex-shrink: 0; }
+    .money-vis-card { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 36px; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .money-sliders { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
+    .money-slider-group {}
+    .money-slider-label { font-size: 13px; font-weight: 700; color: var(--text); }
+    .money-slider-val { font-size: 15px; font-weight: 800; color: var(--indigo); }
+    .money-range { width: 100%; accent-color: var(--indigo); cursor: pointer; }
+    .money-range-end { font-size: 11px; color: var(--text-faint); }
+    .money-chart-area { margin-bottom: 24px; }
+    .money-chart-legend { display: flex; gap: 20px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+    .mcl-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-dim); }
+    .mcl-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .money-results-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
+    .money-result-cell { border-radius: 12px; padding: 16px; text-align: center; }
+    .money-result-savings { background: #f1f5f9; border: 1px solid #e2e8f0; }
+    .money-result-fd { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .money-result-invest { background: rgba(5,150,105,0.06); border: 1px solid rgba(5,150,105,0.2); }
+    .money-result-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-faint); margin-bottom: 6px; }
+    .money-result-val { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: var(--text); }
+    .money-result-invest .money-result-val { color: var(--gain); }
+    .money-result-rate { font-size: 11px; color: var(--text-faint); margin-top: 3px; }
+    .money-loss-banner {
+      background: rgba(220,38,38,0.06); border: 1px solid rgba(220,38,38,0.18);
+      border-radius: 12px; padding: 14px 20px; text-align: center;
+      font-size: 14px; color: var(--red); line-height: 1.5;
+    }
+    .money-loss-banner strong { font-weight: 900; font-size: 16px; }
+
+    /* ─────────── SURVEY BLOCK ─────────── */
+    .survey-section { background: var(--light); border-top: 1px solid var(--border); padding: 72px 48px; }
+    .survey-inner { max-width: 860px; margin: 0 auto; }
+    .survey-progress { display: flex; gap: 8px; margin-bottom: 32px; }
+    .survey-step-bar { flex: 1; height: 4px; border-radius: 2px; background: var(--light3); transition: background 0.3s; }
+    .survey-step-bar.done { background: var(--indigo); }
+    .survey-step-bar.active { background: var(--indigo); opacity: 0.5; }
+    .survey-panel { display: none; }
+    .survey-panel.active { display: block; }
+    .survey-logo-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; margin: 20px 0; }
+    .survey-logo-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 14px 8px; background: #fff; border: 1.5px solid var(--border);
+      border-radius: 14px; cursor: pointer; font-size: 12px; color: var(--text-dim);
+      transition: all 0.18s; font-weight: 600;
+    }
+    .survey-logo-btn svg { width: 32px; height: 32px; }
+    .survey-logo-btn.sel { border-color: var(--indigo); background: rgba(79,70,229,0.06); color: var(--indigo); }
+    .survey-theme-grid { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+    .survey-theme-btn {
+      padding: 10px 20px; border-radius: 50px; font-size: 13px; font-weight: 600;
+      border: 1.5px solid var(--border); background: #fff; color: var(--text-dim);
+      cursor: pointer; transition: all 0.18s;
+    }
+    .survey-theme-btn.sel { border-color: var(--indigo); background: rgba(79,70,229,0.08); color: var(--indigo); }
+    .survey-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+    .survey-result-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin: 24px 0; }
+    .survey-result-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+    .src-label { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--indigo); margin-bottom: 8px; }
+    .src-name { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+    .src-ret { font-size: 22px; font-weight: 900; color: var(--gain); letter-spacing: -0.5px; }
+    .src-desc { font-size: 12px; color: var(--text-faint); margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+<!-- ════ NAV ════ -->
+<nav>
+  <div class="nav-logo">🦉 InvestWhat</div>
+  <ul class="nav-links">
+    <li><a href="#">How it Works</a></li>
+    <li><a href="#">Portfolios</a></li>
+    <li><a href="#">Simulator</a></li>
+    <li><a href="#">Blog</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn-ghost">Sign In</button>
+    <button class="btn-pill">Get Started Free</button>
+  </div>
+</nav>
+
+<!-- ════ HERO ════ -->
+<section class="hero">
+
+  <div class="hero-eyebrow">
+    <span class="pulse"></span>
+    <strong>10,247 people</strong> started their investing journey this week
+  </div>
+
+  <h1 class="hero-h1">You're 3 taps away from<br/><em>your first investment</em></h1>
+
+  <p class="hero-sub">
+    Every month you wait is money left on the table. See exactly what you're missing — then fix it in under 5 minutes.
+  </p>
+
+  <div class="hero-ctas">
+    <div class="hero-email-row">
+      <input class="hero-email-input" type="email"
+        placeholder="Enter your email to get started" />
+      <button class="btn-hero btn-hero-primary">See What I'm Missing →</button>
+    </div>
+    <button class="btn-hero btn-hero-ghost">Browse Portfolios First</button>
+  </div>
+
+  <div class="hero-trust-row">
+    <div class="hero-trust-item">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span>No credit card needed</span>
+    </div>
+    <div class="hero-trust-sep">·</div>
+    <div class="hero-trust-item">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <span>Takes 5 minutes</span>
+    </div>
+    <div class="hero-trust-sep">·</div>
+    <div class="hero-trust-item">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      <span>Start from $1</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════ READY-MADE PORTFOLIOS ════ -->
+<div class="ports-section">
+  <div class="section-label">Top Portfolios</div>
+  <h2 class="section-h2">Start with a theme that fits you</h2>
+  <p class="section-sub">Curated portfolios built around investment themes. Pick one to explore — or let our AI build yours from scratch.</p>
+
+  <div class="ports-grid">
+
+    <!-- #1 AI & Semiconductors -->
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-front">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <span class="port-rank">#1</span>
+            <span class="pc-tag" style="background:rgba(250,204,21,0.1);border-color:rgba(250,204,21,0.3);color:#b45309;">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:3px"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              Top Performer
+            </span>
+          </div>
+          <div class="pc-name">AI & Semiconductor Revolution</div>
+          <div class="pc-desc" style="margin-top:8px">Pure-play exposure to the AI infrastructure buildout — GPU leaders, chip designers, and enabling software.</div>
+          <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border)">
+            <div class="port-return-label">5-year total return</div>
+            <div class="port-return-pct">+393.48%</div>
+            <div class="port-stats-row" style="margin-top:10px">
+              <div><div class="port-stat-label">Holdings</div><div class="port-stat-val">7</div></div>
+              <div><div class="port-stat-label">Horizon</div><div class="port-stat-val">5–10 yr</div></div>
+              <div><div class="port-stat-label">Risk</div><div class="port-stat-val">High</div></div>
+            </div>
+          </div>
+          <div class="flip-hint">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            Tap to see full breakdown
+          </div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-back-label">Portfolio Breakdown</div>
+          <div class="flip-back-name">AI & Semiconductor Revolution</div>
+          <div class="flip-back-period">Jan 2020 – May 2025 · 7 holdings</div>
+          <div class="flip-holdings">
+            <div class="flip-holding-row"><span class="flip-holding-name">NVDA</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:35%"></div></div><span class="flip-holding-pct">35%</span></div>
+            <div class="flip-holding-row"><span class="flip-holding-name">AAPL</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:20%"></div></div><span class="flip-holding-pct">20%</span></div>
+            <div class="flip-holding-row"><span class="flip-holding-name">AMD</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:15%"></div></div><span class="flip-holding-pct">15%</span></div>
+            <div class="flip-holding-row"><span class="flip-holding-name">MSFT</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:15%"></div></div><span class="flip-holding-pct">15%</span></div>
+            <div class="flip-holding-row"><span class="flip-holding-name">ASML + 2</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:15%"></div></div><span class="flip-holding-pct">15%</span></div>
+          </div>
+          <div class="flip-perf-row">
+            <div class="flip-perf-cell"><div class="flip-perf-label">Total return</div><div class="flip-perf-val">+393%</div></div>
+            <div class="flip-perf-cell"><div class="flip-perf-label">vs S&amp;P 500</div><div class="flip-perf-val" style="color:#a78bfa">+221%</div></div>
+          </div>
+          <button class="flip-analysis-btn" onclick="event.stopPropagation()">See Full AI Analysis →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- #2 Market Manipulation (Trump) -->
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-front trump-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <span style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.4)">#2</span>
+            <span class="trump-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Political · High Volatility
+            </span>
+          </div>
+          <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:8px">Market Manipulation Portfolio</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.55;margin-bottom:auto">Reconstructed from Trump family disclosures, Truth Social parent, and sectors directly impacted by tariff and deregulation announcements.</div>
+          <div style="padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);margin-top:16px">
+            <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:4px">5-year total return</div>
+            <div class="trump-return">+188.20%</div>
+            <div style="display:flex;gap:20px;margin-top:10px">
+              <div><div style="font-size:11px;color:rgba(255,255,255,0.35)">Holdings</div><div style="font-size:14px;font-weight:700;color:#fff">9</div></div>
+              <div><div style="font-size:11px;color:rgba(255,255,255,0.35)">Volatility</div><div style="font-size:14px;font-weight:700;color:#f87171">Very High</div></div>
+              <div><div style="font-size:11px;color:rgba(255,255,255,0.35)">Risk</div><div style="font-size:14px;font-weight:700;color:#f87171">Speculative</div></div>
+            </div>
+          </div>
+          <div class="flip-hint" style="color:rgba(255,255,255,0.25)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            Tap to see full breakdown
+          </div>
+        </div>
+        <div class="flip-back" style="border-color:rgba(220,38,38,0.25)">
+          <div class="flip-back-label" style="color:rgba(248,113,113,0.6)">Political Portfolio</div>
+          <div class="flip-back-name">Market Manipulation Portfolio</div>
+          <div class="flip-back-period">Based on public STOCK Act filings · 9 holdings</div>
+          <div class="flip-holdings">
+            <div class="flip-holding-row"><span class="flip-holding-name">DJT</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:25%;background:#f87171"></div></div><span class="flip-holding-pct">25%</span></div>
+            <div class="flip-holding-row"><span class="flip-holding-name">GEO</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:15%;background:#f87171"></div></div><span class="flip-holding-pct">15%</span></div>
+            <div class="flip-holding-row"><span class="flip-holding-name">WKHS</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:15%;background:#f87171"></div></div><span class="flip-holding-pct">15%</span></div>
+            <div class="flip-holding-row"><span class="flip-holding-name">PHUN</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:10%;background:#f87171"></div></div><span class="flip-holding-pct">10%</span></div>
+            <div class="flip-holding-row"><span class="flip-holding-name">+5 others</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:35%;background:#f87171"></div></div><span class="flip-holding-pct">35%</span></div>
+          </div>
+          <div class="flip-perf-row">
+            <div class="flip-perf-cell"><div class="flip-perf-label">Total return</div><div class="flip-perf-val" style="color:#f87171">+188%</div></div>
+            <div class="flip-perf-cell"><div class="flip-perf-label">Max drawdown</div><div class="flip-perf-val" style="color:#fca5a5">−67%</div></div>
+          </div>
+          <button class="flip-analysis-btn" style="background:#dc2626" onclick="event.stopPropagation()">See Full AI Analysis →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- #3 Nancy Pelosi -->
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-front">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <span class="port-rank">#3</span>
+            <span class="pc-tag">Political · STOCK Act</span>
+          </div>
+          <div class="pc-name">Nancy Pelosi Portfolio</div>
+          <div class="pc-desc" style="margin-top:8px">Reconstructed from recent House STOCK Act filings. High-conviction concentrated bets — often on tech, ahead of key legislation.</div>
+          <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border)">
+            <div class="port-return-label">5-year total return</div>
+            <div class="port-return-pct">+115.60%</div>
+            <div class="port-stats-row" style="margin-top:10px">
+              <div><div class="port-stat-label">Holdings</div><div class="port-stat-val">10</div></div>
+              <div><div class="port-stat-label">Horizon</div><div class="port-stat-val">3–5 yr</div></div>
+              <div><div class="port-stat-label">Risk</div><div class="port-stat-val">Medium</div></div>
+            </div>
+          </div>
+          <div class="flip-hint">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            Tap to see full breakdown
+          </div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-back-label">Portfolio Breakdown</div>
+          <div class="flip-back-name">Nancy Pelosi Portfolio</div>
+          <div class="flip-back-period">Based on public disclosures · 10 holdings</div>
+          <div class="flip-holdings">
+            <div class="flip-holding-row"><span class="flip-holding-name">NVDA</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:20%"></div></div><span class="flip-holding-pct">20%</span></div>
+            <div class="flip-holding-row"><span class="flip-holding-name">AAPL</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:18%"></div></div><span class="flip-holding-pct">18%</span></div>
+            <div class="flip-holding-row"><span class="flip-holding-name">MSFT</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:15%"></div></div><span class="flip-holding-pct">15%</span></div>
+            <div class="flip-holding-row"><span class="flip-holding-name">GOOGL</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:12%"></div></div><span class="flip-holding-pct">12%</span></div>
+            <div class="flip-holding-row"><span class="flip-holding-name">+6 others</span><div class="flip-holding-bar-track"><div class="flip-holding-bar" style="width:35%"></div></div><span class="flip-holding-pct">35%</span></div>
+          </div>
+          <div class="flip-perf-row">
+            <div class="flip-perf-cell"><div class="flip-perf-label">Total return</div><div class="flip-perf-val">+115%</div></div>
+            <div class="flip-perf-cell"><div class="flip-perf-label">vs S&amp;P 500</div><div class="flip-perf-val" style="color:#a78bfa">−57%</div></div>
+          </div>
+          <button class="flip-analysis-btn" onclick="event.stopPropagation()">See Full AI Analysis →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="filter-pills-row" id="filterPillsRow">
+    <button class="filter-pill active" onclick="setFilter(this)">All</button>
+    <button class="filter-pill" onclick="setFilter(this)">AI</button>
+    <button class="filter-pill" onclick="setFilter(this)">Growth</button>
+    <button class="filter-pill" onclick="setFilter(this)">Dividends</button>
+    <button class="filter-pill" onclick="setFilter(this)">Tech</button>
+    <button class="filter-pill" onclick="setFilter(this)">Clean energy</button>
+    <button class="filter-pill" onclick="setFilter(this)">Political</button>
+    <button class="filter-pill" onclick="setFilter(this)">Crypto</button>
+    <button class="filter-pill" onclick="setFilter(this)">Healthcare</button>
+    <button class="filter-pill" onclick="setFilter(this)">Blue-chip</button>
+    <button class="filter-pill-more" id="moreThemesBtn" onclick="toggleMoreThemes()">More themes ▾</button>
+  </div>
+  <div class="filter-pills-extra" id="filterPillsExtra" style="display:none; flex-wrap:wrap; gap:8px; margin-top:8px;">
+    <button class="filter-pill" onclick="setFilter(this)">Balanced</button>
+    <button class="filter-pill" onclick="setFilter(this)">Biotech</button>
+    <button class="filter-pill" onclick="setFilter(this)">Cybersecurity</button>
+    <button class="filter-pill" onclick="setFilter(this)">Defense</button>
+    <button class="filter-pill" onclick="setFilter(this)">ESG</button>
+    <button class="filter-pill" onclick="setFilter(this)">Fintech</button>
+    <button class="filter-pill" onclick="setFilter(this)">Income</button>
+    <button class="filter-pill" onclick="setFilter(this)">Innovation</button>
+    <button class="filter-pill" onclick="setFilter(this)">Large-cap</button>
+    <button class="filter-pill" onclick="setFilter(this)">Renewables</button>
+    <button class="filter-pill" onclick="setFilter(this)">Semiconductors</button>
+    <button class="filter-pill" onclick="setFilter(this)">Sustainability</button>
+  </div>
+</div>
+
+<!-- ════ TICKER ════ -->
+<div class="ticker">
+  <div class="ticker-track">
+    <div class="t-item"><span class="t-sym">AAPL</span><span class="t-price">$298.21</span><span class="t-up">+0.22%</span></div>
+    <div class="t-item"><span class="t-sym">NVDA</span><span class="t-price">$235.74</span><span class="t-up">+4.39%</span></div>
+    <div class="t-item"><span class="t-sym">TSLA</span><span class="t-price">$443.30</span><span class="t-dn">−0.44%</span></div>
+    <div class="t-item"><span class="t-sym">AMZN</span><span class="t-price">$267.22</span><span class="t-dn">−1.08%</span></div>
+    <div class="t-item"><span class="t-sym">GOOGL</span><span class="t-price">$401.07</span><span class="t-dn">−0.38%</span></div>
+    <div class="t-item"><span class="t-sym">META</span><span class="t-price">$618.43</span><span class="t-up">+0.29%</span></div>
+    <div class="t-item"><span class="t-sym">MSFT</span><span class="t-price">$409.43</span><span class="t-up">+1.04%</span></div>
+    <div class="t-item"><span class="t-sym">NFLX</span><span class="t-price">$1,147</span><span class="t-up">+2.11%</span></div>
+    <div class="t-item"><span class="t-sym">SBUX</span><span class="t-price">$88.42</span><span class="t-up">+0.73%</span></div>
+    <div class="t-item"><span class="t-sym">MCD</span><span class="t-price">$310.20</span><span class="t-up">+0.51%</span></div>
+    <!-- duplicate for seamless loop -->
+    <div class="t-item"><span class="t-sym">AAPL</span><span class="t-price">$298.21</span><span class="t-up">+0.22%</span></div>
+    <div class="t-item"><span class="t-sym">NVDA</span><span class="t-price">$235.74</span><span class="t-up">+4.39%</span></div>
+    <div class="t-item"><span class="t-sym">TSLA</span><span class="t-price">$443.30</span><span class="t-dn">−0.44%</span></div>
+    <div class="t-item"><span class="t-sym">AMZN</span><span class="t-price">$267.22</span><span class="t-dn">−1.08%</span></div>
+    <div class="t-item"><span class="t-sym">GOOGL</span><span class="t-price">$401.07</span><span class="t-dn">−0.38%</span></div>
+    <div class="t-item"><span class="t-sym">META</span><span class="t-price">$618.43</span><span class="t-up">+0.29%</span></div>
+    <div class="t-item"><span class="t-sym">MSFT</span><span class="t-price">$409.43</span><span class="t-up">+1.04%</span></div>
+    <div class="t-item"><span class="t-sym">NFLX</span><span class="t-price">$1,147</span><span class="t-up">+2.11%</span></div>
+    <div class="t-item"><span class="t-sym">SBUX</span><span class="t-price">$88.42</span><span class="t-up">+0.73%</span></div>
+    <div class="t-item"><span class="t-sym">MCD</span><span class="t-price">$310.20</span><span class="t-up">+0.51%</span></div>
+  </div>
+</div>
+
+<!-- ════ SURVEY BLOCK ════ -->
+<div class="survey-section">
+  <div class="survey-inner">
+    <div class="section-label">Build yours in 60 seconds</div>
+    <h2 class="section-h2">Pick what you know.<br/>We'll do the rest.</h2>
+    <p class="section-sub">Answer 2 quick questions — we'll generate 3 personalised portfolios instantly. No signup needed to see them.</p>
+
+    <div class="survey-progress">
+      <div class="survey-step-bar active" id="sbar1"></div>
+      <div class="survey-step-bar" id="sbar2"></div>
+      <div class="survey-step-bar" id="sbar3"></div>
+    </div>
+
+    <!-- Step 1: Logo selector -->
+    <div class="survey-panel active" id="spanel1">
+      <h3 style="font-size:18px;font-weight:800;margin-bottom:4px">Which of these brands do you recognise?</h3>
+      <p style="font-size:14px;color:var(--text-dim);margin-bottom:0">Pick up to 5 brands you know — we'll match your portfolio to them.</p>
+      <div class="survey-logo-grid">
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          Apple
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#e31937"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+          Tesla
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#4285F4"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Google
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#FF9900"><path d="M.045 18.02c.072-.116.187-.124.348-.022 3.636 2.11 7.594 3.166 11.87 3.166 2.852 0 5.668-.533 8.447-1.595l.315-.14c.138-.06.234-.1.293-.13.226-.088.39-.046.466.1.08.156-.003.295-.139.373l-.408.237c-2.99 1.57-6.27 2.36-9.85 2.36C7.154 22.37 3.35 21.21.3 18.86l-.09-.064c-.168-.124-.18-.27-.042-.44l-.123.064zm-.18-1.12c-.135-.148-.11-.32.078-.418.166-.086.323-.046.435.112l.093.14c.082.116.108.216.08.3-.028.082-.107.146-.235.19l-.22.082c-.086.03-.162.05-.228.056-.14.01-.23-.048-.33-.145l.325-.317zm2.037-2.65c-.268-.07-.42-.26-.453-.57-.04-.378.17-.614.637-.708.322-.063.658-.094 1.007-.094.35 0 .686.03 1.01.094.468.094.677.33.637.708-.033.31-.185.5-.453.57C3.933 14.4 3.58 14.43 3.21 14.43c-.372 0-.724-.03-1.057-.09l-.25-.09z"/></svg>
+          Amazon
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Meta
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#E50914"><path d="M5.398 0v.006c3.028 8.556 5.37 15.175 8.348 23.596 2.344.058 4.85.398 4.854.398-2.8-7.924-5.923-16.747-8.8-24zm8.489 0v9.63L18.6 22.951c-.043-7.537-.05-14.977-.002-22.951zM5.398 1.05V24c1.873-.225 2.81-.312 4.715-.398V1.05z"/></svg>
+          Netflix
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#00A8E0"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm5.082 16.676l-1.403 1.404-3.678-3.678-3.678 3.678-1.404-1.404 3.678-3.678-3.678-3.678 1.404-1.403 3.678 3.678 3.678-3.678 1.403 1.403-3.677 3.678 3.677 3.678z"/></svg>
+          PayPal
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#0A0A0A"><path d="M11.572 0c-.176 0-.31.001-.358.007a19.76 19.76 0 0 1-.364.033C7.443.346 4.25 2.185 2.228 5.012a11.875 11.875 0 0 0-2.119 5.243c-.096.659-.108.854-.108 1.747s.012 1.089.108 1.748c.652 4.506 3.86 8.292 8.209 9.695.779.25 1.6.422 2.534.525.363.04 1.935.04 2.299 0 1.611-.178 2.977-.577 4.323-1.264.207-.106.247-.134.219-.158-.02-.013-.9-1.193-1.955-2.62l-1.919-2.592-2.404-3.558a338.739 338.739 0 0 0-2.422-3.556c-.009-.002-.018 1.579-.023 3.51-.007 3.38-.01 3.515-.052 3.595a.426.426 0 0 1-.206.214c-.075.037-.14.044-.495.044H7.81l-.108-.068a.438.438 0 0 1-.157-.171l-.05-.106.006-4.703.007-4.705.072-.092a.645.645 0 0 1 .174-.143c.096-.047.134-.051.54-.051.478 0 .558.018.682.154.035.038 1.337 1.999 2.895 4.361a10760.433 10760.433 0 0 0 4.735 7.17l1.9 2.879.096-.063a12.317 12.317 0 0 0 2.466-2.163 11.944 11.944 0 0 0 2.824-6.134c.096-.66.108-.854.108-1.748 0-.893-.012-1.088-.108-1.747-.652-4.506-3.859-8.292-8.208-9.695a12.597 12.597 0 0 0-2.499-.523A33.119 33.119 0 0 0 11.573 0z"/></svg>
+          NVIDIA
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#0078D4"><path d="M11.5 2C6.261 2 2 6.261 2 11.5S6.261 21 11.5 21 21 16.739 21 11.5 16.739 2 11.5 2zm1 14h-2v-6h2v6zm0-8h-2V6h2v2z"/></svg>
+          Microsoft
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+          Spotify
+        </button>
+        <!-- Row 3 -->
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#111111"><path d="M24 7.8L6.44 15.28C4.98 15.9 3.76 16.2 2.77 16.2 1.32 16.2.53 15.58 0 14.35c-.54-1.5.62-3.65 3.09-5.49z"/></svg>
+          Nike
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#00704A"><circle cx="12" cy="12" r="10"/><polygon points="12,5.5 13.8,10 18.5,10 14.9,12.9 16.4,17.5 12,14.5 7.6,17.5 9.1,12.9 5.5,10 10.2,10" fill="white" opacity="0.9"/></svg>
+          Starbucks
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#FFC72C"><path d="M2 20V9.5C2 6.5 4 4 7 4s5 2.5 5 5.5V20H9.5V9.5C9.5 7.6 8.4 6 7 6S4.5 7.6 4.5 9.5V20zm10 0V9.5C12 6.5 14 4 17 4s5 2.5 5 5.5V20h-2.5V9.5c0-1.9-1.1-3.5-2.5-3.5s-2.5 1.6-2.5 3.5V20z"/></svg>
+          McDonald's
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#113CCF"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1.5 14H7.5V8H10c2.485 0 4.5 1.79 4.5 4s-2.015 4-4 4zm.5-6.5H9v5h2c1.38 0 2.5-.9 2.5-2.5S12.38 9.5 11 9.5z"/></svg>
+          Disney
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#1428A0"><path d="M12.5 7H11c-1.657 0-3 .895-3 2s1.343 2 3 2h1c1.657 0 3 .895 3 2s-1.343 2-3 2h-2M12 5.5V7m0 10v1.5" stroke="#1428A0" stroke-width="0"/><rect width="22" height="22" x="1" y="1" rx="4" fill="#1428A0"/><text x="12" y="16" text-anchor="middle" font-size="13" font-weight="900" fill="white" font-family="sans-serif">S</text></svg>
+          Samsung
+        </button>
+        <!-- Row 4 -->
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#FF0000"/><path d="M14 6h-4L7 18h2.5l.8-2.5h3.4l.8 2.5H17zm-3 7.5 1-4 1 4z" fill="white"/></svg>
+          Adobe
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#FF5A5F"><path d="M12 2a4 4 0 0 0-2 7.46C8.54 10.54 7 12.27 7 14.5c0 2.5 2.24 4.5 5 4.5s5-2 5-4.5c0-2.23-1.54-3.96-3-4.04A4 4 0 0 0 12 2zm0 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm0 8c1.93 0 3 1.4 3 2.5S13.93 17 12 17s-3-1.4-3-2.5S10.07 12 12 12z"/></svg>
+          Airbnb
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#000000"/><path d="M7 7v5a5 5 0 0 0 10 0V7h-2.5v5a2.5 2.5 0 0 1-5 0V7z" fill="white"/></svg>
+          Uber
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 60 24"><rect width="60" height="24" rx="4" fill="#1A1F71"/><text x="30" y="17" text-anchor="middle" font-size="14" font-weight="900" fill="white" font-family="sans-serif" letter-spacing="1">VISA</text></svg>
+          Visa
+        </button>
+        <button class="survey-logo-btn" onclick="surveyToggleBrand(this)">
+          <svg viewBox="0 0 24 24" fill="#F40009"><circle cx="12" cy="12" r="10" fill="#F40009"/><path d="M16 9.5a4.5 4.5 0 0 0-8 0v5a4.5 4.5 0 0 0 8 0" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>
+          Coca-Cola
+        </button>
+      </div>
+      <p style="font-size:13px;color:var(--text-faint);margin-bottom:16px" id="surveyCountMsg"><span id="surveyBrandCount">0</span>/5 selected — pick at least 2 to continue</p>
+      <div class="survey-nav">
+        <span></span>
+        <button class="btn-hero btn-hero-primary" style="padding:12px 28px;font-size:14px" onclick="surveyGo(2)" id="surveyNext1" disabled>Next: Choose Themes →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Theme selector -->
+    <div class="survey-panel" id="spanel2">
+      <h3 style="font-size:18px;font-weight:800;margin-bottom:4px">What themes interest you?</h3>
+      <p style="font-size:14px;color:var(--text-dim)">Pick any that resonate. We'll weight your portfolio accordingly.</p>
+      <div class="survey-theme-grid">
+        <button class="survey-theme-btn" onclick="this.classList.toggle('sel')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:5px"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          AI &amp; Tech
+        </button>
+        <button class="survey-theme-btn" onclick="this.classList.toggle('sel')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:5px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Clean Energy
+        </button>
+        <button class="survey-theme-btn" onclick="this.classList.toggle('sel')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:5px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Crypto &amp; Bitcoin
+        </button>
+        <button class="survey-theme-btn" onclick="this.classList.toggle('sel')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#d97706" stroke="none" style="vertical-align:middle;margin-right:5px"><rect x="2" y="8" width="20" height="8" rx="2"/><rect x="4" y="10" width="16" height="4" rx="1" fill="#f59e0b"/></svg>
+          Gold &amp; Commodities
+        </button>
+        <button class="survey-theme-btn" onclick="this.classList.toggle('sel')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:5px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Cybersecurity
+        </button>
+        <button class="survey-theme-btn" onclick="this.classList.toggle('sel')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:5px"><path d="M3 3h18v18H3z M8 12h8 M12 8v8"/></svg>
+          Healthcare
+        </button>
+        <button class="survey-theme-btn" onclick="this.classList.toggle('sel')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:5px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          Dividends &amp; Income
+        </button>
+        <button class="survey-theme-btn" onclick="this.classList.toggle('sel')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:5px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/></svg>
+          Political Trades
+        </button>
+        <button class="survey-theme-btn" onclick="this.classList.toggle('sel')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:5px"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Consumer Brands
+        </button>
+        <button class="survey-theme-btn" onclick="this.classList.toggle('sel')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:5px"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Blue-chip &amp; Safe
+        </button>
+      </div>
+      <div class="survey-nav">
+        <button class="btn-ghost" onclick="surveyGo(1)">← Back</button>
+        <button class="btn-hero btn-hero-primary" style="padding:12px 28px;font-size:14px" onclick="surveyGo(3)">Generate My Portfolios →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Results -->
+    <div class="survey-panel" id="spanel3">
+      <h3 style="font-size:18px;font-weight:800;margin-bottom:4px">Your 3 personalised portfolios are ready.</h3>
+      <p style="font-size:14px;color:var(--text-dim);margin-bottom:0">Sign up free to see exact holdings, weightings, and live returns.</p>
+      <div class="survey-result-grid" id="survey-result-grid"></div>
+      <div style="background:var(--light2);border:1px solid var(--border);border-radius:12px;padding:16px 20px;font-size:13px;color:var(--text-dim);margin-bottom:20px">
+        <strong style="color:var(--text)">Sign up free to unlock:</strong> exact stock holdings, live portfolio values, risk scores, and the ability to track or invest in any of these.
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn-hero btn-hero-primary" style="padding:14px 32px;font-size:15px">Unlock My Portfolios — Free →</button>
+        <button class="btn-ghost" onclick="surveyGo(1)">Start over</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ WHAT-IF STRIP ════ -->
+<div class="whatif">
+  <div class="whatif-label">What if you'd invested last month?</div>
+  <h2 class="whatif-h2">
+    A month ago, these picks<br/>
+    would've <em>made you money.</em>
+  </h2>
+  <p class="whatif-sub">If you'd invested $1,000 across what you already use every day, here's where you'd be today.</p>
+
+  <div class="whatif-cards">
+    <div class="wc">
+      <div class="wc-icon">
+        <!-- Apple -->
+        <div class="wc-logo" style="background:#000">
+          <svg viewBox="0 0 24 24" fill="#fff"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        </div>
+        <!-- Google -->
+        <div class="wc-logo" style="background:#fff;border:1px solid #eee">
+          <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        </div>
+        <!-- Meta -->
+        <div class="wc-logo" style="background:#0866FF">
+          <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96C18.34 21.21 22 17.06 22 12.06C22 6.53 17.5 2.04 12 2.04Z"/></svg>
+        </div>
+      </div>
+      <div class="wc-then">$1,000 invested · Apr 2026</div>
+      <div class="wc-invested">Apple + Google + Meta</div>
+      <div class="wc-arrow">↓ 30 days later</div>
+      <div class="wc-now-label">Value today</div>
+      <div class="wc-now">$1,087</div>
+      <div class="wc-pct">+8.7% in 30 days</div>
+    </div>
+    <div class="wc">
+      <div class="wc-icon">
+        <!-- NVIDIA -->
+        <div class="wc-logo" style="background:#76b900">
+          <svg viewBox="0 0 24 24" fill="#fff"><path d="M9.5 3.5v1.6c-2.6.4-4.5 2.2-5.1 4.6C3.8 11 3.5 12.5 3.5 14c0 1.6.3 3.1.9 4.4C5 20.2 6.9 22 9.5 22.4V21c-2-.4-3.5-2-4.1-3.9-.4-1.1-.6-2.3-.6-3.6s.2-2.5.6-3.6c.6-1.9 2.1-3.4 4.1-3.8V8.5c-2.7.5-4.8 2.5-5.5 5.2-.3 1.1-.5 2.2-.5 3.3s.2 2.2.5 3.3c.9 3.1 3.6 5.3 6.9 5.7V8.4A8 8 0 0 1 14.5 12c0 2.3-1.5 4.2-3.5 4.9v1.4c2.7-.8 4.7-3.3 4.7-6.3 0-3-2-5.5-4.7-6.3V3.5zm5 0v1.6c1.7.6 3 2 3.4 3.8.2.7.3 1.5.3 2.2s-.1 1.5-.3 2.2c-.4 1.8-1.7 3.2-3.4 3.8V18c2.3-.7 4.1-2.5 4.7-4.8.3-.9.4-1.9.4-2.9s-.1-2-.4-2.9c-.6-2.3-2.4-4.1-4.7-4.8V3.5z"/></svg>
+        </div>
+        <!-- Nintendo (red N) -->
+        <div class="wc-logo" style="background:#E4000F">
+          <svg viewBox="0 0 24 24" fill="#fff"><text x="4" y="18" font-size="16" font-weight="900" font-family="sans-serif">N</text></svg>
+        </div>
+        <!-- EA -->
+        <div class="wc-logo" style="background:#000">
+          <svg viewBox="0 0 24 24" fill="#ff4747"><text x="2" y="17" font-size="13" font-weight="900" font-family="sans-serif">EA</text></svg>
+        </div>
+      </div>
+      <div class="wc-then">$1,000 invested · Apr 2026</div>
+      <div class="wc-invested">NVIDIA + Nintendo + EA</div>
+      <div class="wc-arrow">↓ 30 days later</div>
+      <div class="wc-now-label">Value today</div>
+      <div class="wc-now">$1,134</div>
+      <div class="wc-pct">+13.4% in 30 days</div>
+    </div>
+    <div class="wc">
+      <div class="wc-icon">
+        <!-- Starbucks -->
+        <div class="wc-logo" style="background:#00704A">
+          <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c.83 0 1.5.67 1.5 1.5S12.83 8 12 8s-1.5-.67-1.5-1.5S11.17 5 12 5zm4 11H8l1-6h6l1 6z"/></svg>
+        </div>
+        <!-- McDonald's -->
+        <div class="wc-logo" style="background:#FFC72C">
+          <svg viewBox="0 0 24 24"><text x="2" y="18" font-size="18" font-weight="900" font-family="sans-serif" fill="#DA291C">M</text></svg>
+        </div>
+        <!-- Visa -->
+        <div class="wc-logo" style="background:#1A1F71">
+          <svg viewBox="0 0 24 24"><text x="1" y="16" font-size="9" font-weight="900" font-family="sans-serif" fill="#fff">VISA</text></svg>
+        </div>
+      </div>
+      <div class="wc-then">$1,000 invested · Apr 2026</div>
+      <div class="wc-invested">Starbucks + McDonald's + Visa</div>
+      <div class="wc-arrow">↓ 30 days later</div>
+      <div class="wc-now-label">Value today</div>
+      <div class="wc-now">$1,052</div>
+      <div class="wc-pct">+5.2% in 30 days</div>
+    </div>
+    <div class="wc">
+      <div class="wc-icon">
+        <!-- Tesla -->
+        <div class="wc-logo" style="background:#CC0000">
+          <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 3.5C8.5 3.5 5.5 5 4 7.5h16C18.5 5 15.5 3.5 12 3.5zM4.5 9l1 9.5c.2 1.1 1.1 2 2.2 2H16.3c1.1 0 2-.9 2.2-2L19.5 9H4.5zm7.5 1c.8 0 1.5.7 1.5 1.5v5c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5v-5c0-.8.7-1.5 1.5-1.5z"/></svg>
+        </div>
+        <!-- SpaceX (rocket SVG) -->
+        <div class="wc-logo" style="background:#1b1b2e">
+          <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2C9 5 8 9 9 12l-4 4 2 2 4-4c3 1 7 0 10-3-2-4-6-8-9-9zm3 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/><path d="M7 15l-3 3 1 1 3-3z" opacity=".6"/></svg>
+        </div>
+        <!-- Palantir -->
+        <div class="wc-logo" style="background:#101828">
+          <svg viewBox="0 0 24 24"><text x="2" y="16" font-size="9" font-weight="900" font-family="sans-serif" fill="#fff">PLTR</text></svg>
+        </div>
+      </div>
+      <div class="wc-then">$1,000 invested · Apr 2026</div>
+      <div class="wc-invested">Tesla + SpaceX ETF + Palantir</div>
+      <div class="wc-arrow">↓ 30 days later</div>
+      <div class="wc-now-label">Value today</div>
+      <div class="wc-now">$1,219</div>
+      <div class="wc-pct">+21.9% in 30 days</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ MONEY VISUALISER ════ -->
+<div class="money-vis-section">
+  <div class="money-vis-inner">
+    <div class="section-label">What you're actually losing</div>
+    <h2 class="section-h2">See what keeping money<br/>in savings is costing you</h2>
+    <p class="section-sub">Most people know savings rates are low. Few realise just how much they're giving up.</p>
+
+    <div class="money-stat-strip">
+      <div class="money-stat-item">
+        <div class="money-stat-num">57%</div>
+        <div class="money-stat-label">of adults keep most savings in a bank account</div>
+        <div class="money-stat-src">Source: OECD Financial Literacy Survey 2023</div>
+      </div>
+      <div class="money-stat-div"></div>
+      <div class="money-stat-item">
+        <div class="money-stat-num">0.5%</div>
+        <div class="money-stat-label">average savings account interest rate (global)</div>
+        <div class="money-stat-src">Source: World Bank, 2024</div>
+      </div>
+      <div class="money-stat-div"></div>
+      <div class="money-stat-item">
+        <div class="money-stat-num">10.5%</div>
+        <div class="money-stat-label">S&amp;P 500 average annual return, last 30 years</div>
+        <div class="money-stat-src">Source: Macrotrends, 2024</div>
+      </div>
+    </div>
+
+    <div class="money-vis-card">
+      <div class="money-sliders">
+        <div class="money-slider-group">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <label class="money-slider-label">Starting capital</label>
+            <span class="money-slider-val" id="capitalDisplay">$10,000</span>
+          </div>
+          <input type="range" class="money-range" id="capitalSlider" min="1000" max="100000" step="1000" value="10000" oninput="updateVis()"/>
+          <div style="display:flex;justify-content:space-between;margin-top:4px">
+            <span class="money-range-end">$1,000</span><span class="money-range-end">$100,000</span>
+          </div>
+        </div>
+        <div class="money-slider-group">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <label class="money-slider-label">Time horizon</label>
+            <span class="money-slider-val" id="yearsDisplay">10 years</span>
+          </div>
+          <input type="range" class="money-range" id="yearsSlider" min="1" max="30" step="1" value="10" oninput="updateVis()"/>
+          <div style="display:flex;justify-content:space-between;margin-top:4px">
+            <span class="money-range-end">1 yr</span><span class="money-range-end">30 yrs</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="money-chart-area">
+        <svg id="moneyChart" viewBox="0 0 600 200" preserveAspectRatio="none" style="width:100%;height:160px;display:block"></svg>
+        <div class="money-chart-legend">
+          <div class="mcl-item"><div class="mcl-dot" style="background:#94a3b8"></div><span>Savings (0.5% p.a.)</span></div>
+          <div class="mcl-item"><div class="mcl-dot" style="background:#60a5fa"></div><span>Fixed deposit (2.8% p.a.)</span></div>
+          <div class="mcl-item"><div class="mcl-dot" style="background:#059669"></div><span>Invested portfolio (8% p.a.)</span></div>
+        </div>
+      </div>
+
+      <div class="money-results-row">
+        <div class="money-result-cell money-result-savings">
+          <div class="money-result-label">Savings account</div>
+          <div class="money-result-val" id="resSavings">—</div>
+          <div class="money-result-rate">at 0.5% p.a.</div>
+        </div>
+        <div class="money-result-cell money-result-fd">
+          <div class="money-result-label">Fixed deposit</div>
+          <div class="money-result-val" id="resFD">—</div>
+          <div class="money-result-rate">at 2.8% p.a.</div>
+        </div>
+        <div class="money-result-cell money-result-invest">
+          <div class="money-result-label">Invested portfolio</div>
+          <div class="money-result-val" id="resInvest">—</div>
+          <div class="money-result-rate">at 8% p.a. (S&amp;P avg)</div>
+        </div>
+      </div>
+
+      <div class="money-loss-banner" id="moneyLossBanner">
+        By staying in savings, you're leaving <strong id="lossAmount">$X</strong> on the table over <span id="lossYears">Y</span> years.
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:32px">
+      <button class="btn-hero btn-hero-primary" style="font-size:15px;padding:16px 40px">Start Investing — See Your Real Returns →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ HOW IT WORKS ════ -->
+<div class="hiw" style="background: var(--light2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="section-label">How it works</div>
+  <h2 class="section-h2">From curious<br/>to invested.</h2>
+  <p class="section-sub">InvestWhat gets you from zero to a live portfolio — no jargon, no overwhelm.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">Step 01</div>
+      <div class="step-icon">🗂️</div>
+      <h3>Pick a portfolio or build your own</h3>
+      <p>Browse curated themes — AI, growth, political trades, and more — or sign up and let our AI generate one around your interests and the sectors you believe in.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;">
+        <span class="step-hint">Takes ~60 seconds</span>
+        <span class="step-hint">No account needed to browse</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">Step 02</div>
+      <div class="step-icon">🤖</div>
+      <h3>Understand what you own and why</h3>
+      <p>Every portfolio comes with plain-English breakdowns, health scores, historical returns, and AI-powered insights — so you always know what's in your portfolio and why it's there.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;">
+        <span class="step-hint">No jargon</span>
+        <span class="step-hint">Plain-English AI explanations</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">Step 03</div>
+      <div class="step-icon">📈</div>
+      <h3>Track, simulate & grow over time</h3>
+      <p>Run historical scenarios, set price alerts, and watch your portfolio move in real time. Build conviction before committing real capital. <a href="#" style="color:var(--indigo);text-decoration:underline;">Try the simulator →</a></p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;">
+        <span class="step-hint">Real market data</span>
+        <span class="step-hint">No real money needed</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SIMULATOR ════ -->
+<div class="sim-section">
+  <div class="sim-inner">
+    <div class="sim-left">
+      <div class="section-label">Try It Yourself</div>
+      <h2>See what your portfolio<br/>would have made.</h2>
+      <p>Pick any companies you like, choose how much to put in each, and we'll show you exactly how that investment would have grown over the past 5 years — using real market data. No finance knowledge needed.</p>
+      <div class="sim-features">
+        <div class="sim-feat">
+          <div class="sim-feat-icon">📈</div>
+          <div>
+            <div class="sim-feat-title">Pick your companies</div>
+            <div class="sim-feat-desc">Search for any brand you recognise — Apple, Tesla, Nike — and add them to your portfolio with a single click.</div>
+          </div>
+        </div>
+        <div class="sim-feat">
+          <div class="sim-feat-icon">⏪</div>
+          <div>
+            <div class="sim-feat-title">Travel back in time</div>
+            <div class="sim-feat-desc">We rewind the clock and show you exactly how your portfolio would have grown — month by month — over the last 5 years.</div>
+          </div>
+        </div>
+        <div class="sim-feat">
+          <div class="sim-feat-icon">🌊</div>
+          <div>
+            <div class="sim-feat-title">See the tough moments too</div>
+            <div class="sim-feat-desc">Watch how your picks would have held up through real market dips like the COVID crash in 2020. Knowing this builds real confidence.</div>
+          </div>
+        </div>
+        <div class="sim-feat">
+          <div class="sim-feat-icon">🏆</div>
+          <div>
+            <div class="sim-feat-title">Compare to the market</div>
+            <div class="sim-feat-desc">See whether your picks would have beaten the market average — shown in plain numbers, no jargon.</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-hero btn-hero-primary">Try our Simulator now →</button>
+    </div>
+    <div>
+      <div class="sim-card">
+        <div class="sim-card-label">Here's how $1,000 invested in 2020 would look today</div>
+
+        <div class="sim-pills-row" id="simPillsRow">
+          <div class="sim-pill sim-pill-active" onclick="swapSimPill(this, 'Apple')">Apple <span>30%</span></div>
+          <div class="sim-pill sim-pill-active" onclick="swapSimPill(this, 'Nvidia')">Nvidia <span>25%</span></div>
+          <div class="sim-pill sim-pill-active" onclick="swapSimPill(this, 'Google')">Google <span>25%</span></div>
+          <div class="sim-pill sim-pill-active" onclick="swapSimPill(this, 'Netflix')">Netflix <span>20%</span></div>
+        </div>
+        <div id="simSwapRow" style="display:none; margin-bottom:12px;">
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:6px;">Replace with:</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <button class="sim-swap-chip" onclick="doSwap('Tesla')">Tesla</button>
+            <button class="sim-swap-chip" onclick="doSwap('Meta')">Meta</button>
+            <button class="sim-swap-chip" onclick="doSwap('Microsoft')">Microsoft</button>
+            <button class="sim-swap-chip" onclick="doSwap('Amazon')">Amazon</button>
+            <button class="sim-swap-chip" onclick="doSwap('AMD')">AMD</button>
+          </div>
+        </div>
+
+        <div class="sim-metrics">
+          <div class="sim-metric">
+            <div class="sim-metric-label">Your $1,000 grew to</div>
+            <div class="sim-metric-val" style="color:var(--gain)">$3,841</div>
+          </div>
+          <div class="sim-metric">
+            <div class="sim-metric-label">That's a gain of</div>
+            <div class="sim-metric-val" style="color:var(--gain)">+284%</div>
+          </div>
+          <div class="sim-metric">
+            <div class="sim-metric-label">Market average</div>
+            <div class="sim-metric-val" style="color:var(--text-dim)">+172%</div>
+            <div class="sim-metric-note">You would have beaten it</div>
+          </div>
+        </div>
+
+        <svg viewBox="0 0 400 80" preserveAspectRatio="none" fill="none" style="width:100%;height:80px;display:block;margin-bottom:12px;">
+          <defs>
+            <linearGradient id="simgrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#6366f1" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,70 C40,68 60,72 90,65 C110,40 130,55 160,45 C190,35 210,50 240,30 C270,20 300,35 330,15 C360,8 380,5 400,2 L400,80 L0,80 Z" fill="url(#simgrad)"/>
+          <path d="M0,70 C40,68 60,72 90,65 C110,40 130,55 160,45 C190,35 210,50 240,30 C270,20 300,35 330,15 C360,8 380,5 400,2" stroke="#6366f1" stroke-width="2" fill="none"/>
+          <text x="68" y="78" font-size="9" fill="rgba(15,18,37,0.25)" font-family="sans-serif">COVID dip</text>
+          <text x="205" y="58" font-size="9" fill="rgba(15,18,37,0.25)" font-family="sans-serif">2022 slowdown</text>
+          <text x="358" y="10" font-size="9" fill="rgba(15,18,37,0.25)" font-family="sans-serif">Today</text>
+        </svg>
+
+        <div class="sim-card-amount">$3,841</div>
+        <div class="sim-card-sub">from $1,000 · 5 years · Apple, Nvidia, Google, Netflix</div>
+
+        <div class="sim-unlock">
+          Want to try your own picks?<br/>
+          <a href="#">Create a free account — it takes 60 seconds.</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════ SOCIAL PROOF ════ -->
+<div class="proof-section">
+  <div class="proof-inner">
+<div class="section-label" style="margin-bottom:12px">Real people. Real results.</div>
+    <h2 class="section-h2" style="margin-bottom:8px">The most common objections — answered.</h2>
+    <p class="section-sub" style="margin-bottom:40px">Every new investor had the same fears. Here's what they found out.</p>
+    <div class="testimonials">
+      <div class="testi">
+        <div class="testi-objection">"I don't know where to start."</div>
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-q">"I had zero idea what stocks to buy. InvestWhat just asked which brands I use. I picked Apple, Netflix, McDonald's — it built my portfolio. It's already up 23% in three months."</div>
+        <div class="testi-author">
+          <div class="testi-av" style="background:linear-gradient(135deg,#6366f1,#a78bfa)">S</div>
+          <div><div class="testi-name">Sasha M. <span style="font-size:10px;color:var(--gain);font-weight:600;">✓ verified</span></div><div class="testi-handle">@sashamade · Singapore · Started with $500</div></div>
+        </div>
+      </div>
+      <div class="testi">
+        <div class="testi-objection">"I don't have much money."</div>
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-q">"I started with $200. That's it. 14 months later it's $340. Not life-changing, but I learned how markets work and now I contribute every month. I wish I started sooner."</div>
+        <div class="testi-author">
+          <div class="testi-av" style="background:linear-gradient(135deg,#0ea5e9,#34d399)">J</div>
+          <div><div class="testi-name">James T. <span style="font-size:10px;color:var(--gain);font-weight:600;">✓ verified</span></div><div class="testi-handle">@james_t · London · Started with $200</div></div>
+        </div>
+      </div>
+      <div class="testi">
+        <div class="testi-objection">"Is it safe? Can I trust this?"</div>
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-q">"I was skeptical. But the platform is MAS-regulated, shows you historical data before you commit a dollar, and has a free simulator. I tested it for 2 weeks before putting any money in."</div>
+        <div class="testi-author">
+          <div class="testi-av" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">R</div>
+          <div><div class="testi-name">Riya K. <span style="font-size:10px;color:var(--gain);font-weight:600;">✓ verified</span></div><div class="testi-handle">@riya_k · Mumbai · Simulated for 2 weeks first</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ FINAL CTA ════ -->
+<div class="final">
+  <div style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:24px;">The best time to start was yesterday. The next best time is now.</div>
+  <h2>Start Your<br/>Investment Journey</h2>
+  <p>No minimums. No jargon. Just your first step.</p>
+  <div class="final-ctas" style="flex-direction:column;align-items:center;gap:16px;">
+    <button class="btn-hero btn-hero-primary" style="font-size:18px;padding:20px 56px;">Get Started Free →</button>
+    <span style="font-size:13px;color:rgba(255,255,255,0.35);">Join 180,000+ investors who stopped waiting</span>
+  </div>
+</div>
+
+<!-- ════ FOOTER ════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div style="font-size:17px;font-weight:800">🦉 InvestWhat</div>
+      <p>Tailored, timely insights for smarter investment decisions. Invest in what you know, grow with confidence.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="#">Markets</a></li>
+        <li><a href="#">Portfolios</a></li>
+        <li><a href="#">Simulator</a></li>
+        <li><a href="#">Watchlist</a></li>
+        <li><a href="#">Sage AI</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Disclaimer</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 InvestWhat. All rights reserved. Powered by TradeSocio.</span>
+    <span>𝕏 · LinkedIn · Instagram · TikTok</span>
+  </div>
+  <div class="disclaimer">
+    The content provided on InvestWhat is for general informational purposes only and does not constitute investment advice, a recommendation, or a solicitation to buy or sell any financial instrument. All investments involve risk, including the potential loss of principal. Past performance does not guarantee future results. Please consult a qualified financial advisor before making any investment decisions.
+  </div>
+</footer>
+
+<script>
+  // ── Brand chip toggle ──
+  document.querySelectorAll('.bc').forEach(chip => {
+    chip.addEventListener('click', () => {
+      chip.classList.toggle('sel');
+      const n = document.querySelectorAll('.bc.sel').length;
+      const el = document.getElementById('brand-count');
+      if (el) el.textContent = n;
+    });
+  });
+
+  // ── Sector pill toggle ──
+  document.querySelectorAll('.sector-pill').forEach(pill => {
+    pill.addEventListener('click', () => pill.classList.toggle('sel'));
+  });
+
+  // ── Onboarding panel switcher ──
+  function showPanel(name) {
+    ['brands','themes','portfolios'].forEach(p => {
+      const el = document.getElementById('panel-' + p);
+      if (el) el.style.display = p === name ? 'block' : 'none';
+    });
+    // update step pips
+    const states = { brands: [1,0,0], themes: [1,1,0], portfolios: [1,1,1] };
+    const s = states[name] || [0,0,0];
+    ['pip1','pip2','pip3'].forEach((id, i) => {
+      const pip = document.getElementById(id);
+      if (!pip) return;
+      pip.classList.remove('done','active');
+      if (i < s.filter(Boolean).length - (name === 'portfolios' ? 0 : 1)) pip.classList.add('done');
+      else if (i === s.filter(Boolean).length - (name === 'portfolios' ? 0 : 1)) pip.classList.add('active');
+    });
+  }
+
+  // ── Generated portfolio picker ──
+  function pickPort(el) {
+    document.querySelectorAll('.gp').forEach(g => g.classList.remove('picked'));
+    el.classList.add('picked');
+  }
+
+  // ── Time tab ──
+  document.querySelectorAll('.tp').forEach(tp => {
+    tp.addEventListener('click', () => {
+      document.querySelectorAll('.tp').forEach(t => t.classList.remove('on'));
+      tp.classList.add('on');
+    });
+  });
+
+  // ── Filter pills ──
+  function setFilter(pill) {
+    const isAll = pill.textContent.trim() === 'All';
+    const allPills = document.querySelectorAll('.filter-pill');
+    if (isAll) {
+      allPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+    } else {
+      document.querySelector('.filter-pill')?.classList.remove('active'); // deactivate All
+      pill.classList.toggle('active');
+      if (!document.querySelector('.filter-pill.active')) {
+        document.querySelector('.filter-pill').classList.add('active');
+      }
+    }
+  }
+
+  function toggleMoreThemes() {
+    const extra = document.getElementById('filterPillsExtra');
+    const btn = document.getElementById('moreThemesBtn');
+    const open = extra.style.display !== 'none';
+    extra.style.display = open ? 'none' : 'flex';
+    btn.textContent = open ? 'More themes ▾' : 'Fewer themes ▴';
+  }
+
+  // ── Simulator pill swap ──
+  let _swapTarget = null;
+  function swapSimPill(pill, name) {
+    _swapTarget = pill;
+    document.querySelectorAll('.sim-pill-active').forEach(p => p.classList.remove('sim-pill-selected'));
+    pill.classList.add('sim-pill-selected');
+    document.getElementById('simSwapRow').style.display = 'block';
+  }
+  function doSwap(name) {
+    if (!_swapTarget) return;
+    const pct = _swapTarget.querySelector('span').textContent;
+    _swapTarget.innerHTML = name + ' <span>' + pct + '</span>';
+    _swapTarget.onclick = function() { swapSimPill(this, name); };
+    _swapTarget.classList.remove('sim-pill-selected');
+    _swapTarget = null;
+    document.getElementById('simSwapRow').style.display = 'none';
+  }
+
+  // ── Money Visualiser ──
+  function fmt(n) {
+    return '$' + Math.round(n).toLocaleString();
+  }
+  function compound(principal, rate, years) {
+    return principal * Math.pow(1 + rate, years);
+  }
+  function updateVis() {
+    const cap = +document.getElementById('capitalSlider').value;
+    const yrs = +document.getElementById('yearsSlider').value;
+    document.getElementById('capitalDisplay').textContent = '$' + cap.toLocaleString();
+    document.getElementById('yearsDisplay').textContent = yrs + ' year' + (yrs===1?'':'s');
+
+    const savings = compound(cap, 0.005, yrs);
+    const fd      = compound(cap, 0.028, yrs);
+    const invest  = compound(cap, 0.08, yrs);
+
+    document.getElementById('resSavings').textContent = fmt(savings);
+    document.getElementById('resFD').textContent = fmt(fd);
+    document.getElementById('resInvest').textContent = fmt(invest);
+
+    const loss = invest - savings;
+    document.getElementById('lossAmount').textContent = fmt(loss);
+    document.getElementById('lossYears').textContent = yrs;
+
+    // draw SVG chart
+    const svg = document.getElementById('moneyChart');
+    const W = 600, H = 200, PAD = 20;
+    const points = [];
+    for (let y = 0; y <= yrs; y++) {
+      points.push({
+        s: compound(cap, 0.005, y),
+        f: compound(cap, 0.028, y),
+        i: compound(cap, 0.08, y)
+      });
+    }
+    const maxVal = points[points.length-1].i;
+    const minVal = cap;
+    const range = maxVal - minVal || 1;
+    function px(v) { return H - PAD - ((v - minVal) / range) * (H - 2*PAD); }
+    function py(idx) { return PAD + (idx / yrs) * (W - 2*PAD); }
+
+    const mkPath = (key) => points.map((p,i) => (i===0?'M':'L') + py(i).toFixed(1)+','+px(p[key]).toFixed(1)).join(' ');
+
+    svg.innerHTML = `
+      <path d="${mkPath('s')}" stroke="#94a3b8" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
+      <path d="${mkPath('f')}" stroke="#60a5fa" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
+      <path d="${mkPath('i')} L${(W-PAD).toFixed(1)},${H-PAD} L${PAD},${H-PAD} Z" fill="rgba(5,150,105,0.08)"/>
+      <path d="${mkPath('i')}" stroke="#059669" stroke-width="2.5" fill="none"/>
+    `;
+  }
+  updateVis();
+
+  // ── Survey ──
+  let _surveyBrandCount = 0;
+  function surveyToggleBrand(btn) {
+    const isSel = btn.classList.contains('sel');
+    if (!isSel && _surveyBrandCount >= 5) return; // at limit, block new selections
+    btn.classList.toggle('sel');
+    surveyUpdateCount();
+  }
+  function surveyUpdateCount() {
+    _surveyBrandCount = document.querySelectorAll('.survey-logo-btn.sel').length;
+    document.getElementById('surveyBrandCount').textContent = _surveyBrandCount;
+    document.getElementById('surveyNext1').disabled = _surveyBrandCount < 2;
+    const atMax = _surveyBrandCount >= 5;
+    document.querySelectorAll('.survey-logo-btn:not(.sel)').forEach(b => {
+      b.style.opacity = atMax ? '0.35' : '';
+      b.style.cursor = atMax ? 'default' : '';
+    });
+    const msg = document.getElementById('surveyCountMsg');
+    if (msg) msg.innerHTML = `<span id="surveyBrandCount">${_surveyBrandCount}</span>/5 selected${atMax ? ' — <strong style="color:var(--indigo)">limit reached, deselect to change</strong>' : ' — pick at least 2 to continue'}`;
+  }
+  // Real approximate 5-year returns (2020–2025)
+  const BRAND_DATA = {
+    'Apple':      { ticker: 'AAPL',  ret: 350  },
+    'Tesla':      { ticker: 'TSLA',  ret: 380  },
+    'Google':     { ticker: 'GOOGL', ret: 178  },
+    'Amazon':     { ticker: 'AMZN',  ret: 82   },
+    'Meta':       { ticker: 'META',  ret: 219  },
+    'Netflix':    { ticker: 'NFLX',  ret: 93   },
+    'NVIDIA':     { ticker: 'NVDA',  ret: 1840 },
+    'Microsoft':  { ticker: 'MSFT',  ret: 192  },
+    'Spotify':    { ticker: 'SPOT',  ret: 68   },
+    'PayPal':     { ticker: 'PYPL',  ret: -42  },
+    'Nike':       { ticker: 'NKE',   ret: 52   },
+    'Starbucks':  { ticker: 'SBUX',  ret: 33   },
+    "McDonald's": { ticker: 'MCD',   ret: 65   },
+    'Disney':     { ticker: 'DIS',   ret: -5   },
+    'Samsung':    { ticker: 'SSNLF', ret: 38   },
+    'Adobe':      { ticker: 'ADBE',  ret: 128  },
+    'Airbnb':     { ticker: 'ABNB',  ret: 48   },
+    'Uber':       { ticker: 'UBER',  ret: 70   },
+    'Visa':       { ticker: 'V',     ret: 55   },
+    'Coca-Cola':  { ticker: 'KO',    ret: 42   },
+  };
+  const THEME_DATA = {
+    'AI & Tech':           { ret: 490 },
+    'Clean Energy':        { ret: 85  },
+    'Crypto & Bitcoin':    { ret: 320 },
+    'Gold & Commodities':  { ret: 65  },
+    'Cybersecurity':       { ret: 210 },
+    'Healthcare':          { ret: 72  },
+    'Dividends & Income':  { ret: 95  },
+    'Political Trades':    { ret: 188 },
+    'Consumer Brands':     { ret: 88  },
+    'Blue-chip & Safe':    { ret: 115 },
+  };
+
+  function surveyGo(step) {
+    [1,2,3].forEach(i => {
+      document.getElementById('spanel'+i).classList.toggle('active', i===step);
+      const bar = document.getElementById('sbar'+i);
+      if (i < step) { bar.className = 'survey-step-bar done'; }
+      else if (i === step) { bar.className = 'survey-step-bar active'; }
+      else { bar.className = 'survey-step-bar'; }
+    });
+    if (step !== 3) return;
+
+    // Read selections
+    const brandBtns = [...document.querySelectorAll('.survey-logo-btn.sel')];
+    const themeBtns = [...document.querySelectorAll('.survey-theme-btn.sel')];
+    const selBrands = brandBtns.map(b => b.textContent.trim()).filter(n => BRAND_DATA[n]);
+    const selThemes = themeBtns.map(b => b.textContent.trim()).filter(n => THEME_DATA[n]);
+
+    // Weighted average helper
+    function avg(items, map, key) {
+      if (!items.length) return 0;
+      return Math.round(items.reduce((s, n) => s + map[n][key], 0) / items.length);
+    }
+
+    const brandRet = selBrands.length ? avg(selBrands, BRAND_DATA, 'ret') : 180;
+    const themeRet = selThemes.length ? avg(selThemes, THEME_DATA, 'ret') : 160;
+    // Portfolio C blends both, boosted by best single pick
+    const allRets = [...selBrands.map(n => BRAND_DATA[n].ret), ...selThemes.map(n => THEME_DATA[n].ret)];
+    const topRet = allRets.length ? Math.max(...allRets) : 310;
+    const blendRet = Math.round((brandRet * 0.35 + themeRet * 0.35 + topRet * 0.30));
+
+    // Portfolio A name
+    const brandLabels = selBrands.length
+      ? (selBrands.length <= 3 ? selBrands.join(' + ') : selBrands.slice(0, 2).join(' + ') + ' +' + (selBrands.length - 2) + ' more')
+      : 'Your Brands';
+    const brandTickers = selBrands.map(n => BRAND_DATA[n].ticker).join(' · ') || 'AAPL · MSFT · AMZN';
+    const brandRetStr = (brandRet >= 0 ? '+' : '') + brandRet + '%';
+    const brandColor = brandRet >= 0 ? 'var(--gain)' : 'var(--red)';
+
+    // Portfolio B name
+    const themeLabel = selThemes.length
+      ? (selThemes.length === 1 ? selThemes[0] : selThemes.slice(0, 2).join(' & ') + (selThemes.length > 2 ? ' +' + (selThemes.length - 2) + ' more' : ''))
+      : 'Theme-Driven Growth';
+    const themeRetStr = (themeRet >= 0 ? '+' : '') + themeRet + '%';
+    const themeColor = themeRet >= 0 ? 'var(--gain)' : 'var(--red)';
+
+    // Portfolio C: best of blend
+    const blendRetStr = (blendRet >= 0 ? '+' : '') + blendRet + '%';
+    const blendColor = blendRet >= 0 ? 'var(--gain)' : 'var(--red)';
+
+    document.getElementById('survey-result-grid').innerHTML = `
+      <div class="survey-result-card">
+        <div class="src-label">Portfolio A · Your Brands</div>
+        <div class="src-name" style="margin-bottom:2px">${brandLabels}</div>
+        <div style="font-size:11px;color:var(--text-faint);margin-bottom:6px">${brandTickers}</div>
+        <div class="src-ret" style="color:${brandColor}">${brandRetStr}</div>
+        <div class="src-desc">Equal-weight basket of your selected stocks · 5-year backtest</div>
+      </div>
+      <div class="survey-result-card">
+        <div class="src-label">Portfolio B · Your Themes</div>
+        <div class="src-name">${themeLabel}</div>
+        <div class="src-ret" style="color:${themeColor}">${themeRetStr}</div>
+        <div class="src-desc">ETF basket weighted toward your chosen themes · 5-year backtest</div>
+      </div>
+      <div class="survey-result-card" style="border-color:rgba(79,70,229,0.25);background:rgba(79,70,229,0.04)">
+        <div class="src-label" style="color:var(--indigo)">Portfolio C · AI Pick ✦</div>
+        <div class="src-name">AI Diversified Blend</div>
+        <div class="src-ret" style="color:${blendColor}">${blendRetStr}</div>
+        <div class="src-desc">AI-balanced across your brands + themes, anchored to your top pick · 5-year backtest</div>
+      </div>`;
+  }
+</script>
+</body>
+</html>
