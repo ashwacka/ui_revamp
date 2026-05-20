@@ -781,27 +781,6 @@
       .footer-grid { grid-template-columns: 1fr 1fr; }
       .whatif-cards { flex-direction: column; align-items: center; }
 
-      /* Money visualiser — tablet */
-      .money-vis-section { padding: 56px 24px; }
-      .money-vis-card { padding: 24px; }
-      .money-sliders { grid-template-columns: 1fr; gap: 24px; }
-      .money-results-row { grid-template-columns: 1fr; gap: 10px; }
-      .money-stat-strip { flex-direction: column; border-radius: 16px; }
-      .money-stat-div { width: 100%; height: 1px; flex-shrink: 0; }
-    }
-
-    @media (max-width: 480px) {
-      /* Money visualiser — phone */
-      .money-vis-section { padding: 40px 16px; }
-      .money-vis-card { padding: 18px 16px; border-radius: 16px; }
-      .money-stat-strip { border-radius: 14px; }
-      .money-stat-item { padding: 20px 16px; }
-      .money-stat-num { font-size: 28px; }
-      .money-results-row { gap: 8px; }
-      .money-result-cell { padding: 12px; }
-      .money-result-val { font-size: 18px; }
-      .money-loss-banner { font-size: 13px; padding: 12px 14px; }
-      .money-chart-legend { gap: 12px; }
     }
     .tip { font-size: 10px; color: var(--text-faint); cursor: help; vertical-align: middle; }
     .filter-pill { text-transform: none; }
@@ -910,6 +889,31 @@
     .src-name { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
     .src-ret { font-size: 22px; font-weight: 900; color: var(--gain); letter-spacing: -0.5px; }
     .src-desc { font-size: 12px; color: var(--text-faint); margin-top: 4px; }
+
+    /* ─────────── MONEY VIS RESPONSIVE (must be last to beat base styles) ─────────── */
+    @media (max-width: 960px) {
+      .money-vis-section { padding: 56px 24px; }
+      .money-vis-card { padding: 24px; }
+      .money-sliders { grid-template-columns: 1fr !important; gap: 20px; }
+      .money-results-row { grid-template-columns: 1fr !important; gap: 10px; }
+      .money-stat-strip { flex-direction: column; }
+      .money-stat-div { width: 100%; height: 1px; flex-shrink: 0; }
+      .money-stat-item { padding: 20px 20px; }
+    }
+
+    @media (max-width: 480px) {
+      .money-vis-section { padding: 32px 16px; }
+      .money-vis-card { padding: 16px; border-radius: 16px; }
+      .money-stat-strip { border-radius: 14px; }
+      .money-stat-item { padding: 16px; }
+      .money-stat-num { font-size: 26px; letter-spacing: -1px; }
+      .money-stat-label { font-size: 12px; }
+      .money-stat-src { display: none; }
+      .money-result-cell { padding: 12px; }
+      .money-result-val { font-size: 19px; }
+      .money-loss-banner { font-size: 13px; padding: 12px 14px; }
+      .money-chart-legend { flex-direction: column; align-items: flex-start; gap: 8px; padding: 0 4px; }
+    }
   </style>
 </head>
 <body>
