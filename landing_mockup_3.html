@@ -111,7 +111,7 @@
     .hero-h1 {
       font-size: clamp(44px, 7vw, 80px);
       font-weight: 900;
-      letter-spacing: -4px;
+      letter-spacing: -1px;
       line-height: 0.95;
       margin-bottom: 32px;
       max-width: 880px;
@@ -890,6 +890,42 @@
     .src-ret { font-size: 22px; font-weight: 900; color: var(--gain); letter-spacing: -0.5px; }
     .src-desc { font-size: 12px; color: var(--text-faint); margin-top: 4px; }
 
+    /* ─────────── FULL PAGE MOBILE RESPONSIVE ─────────── */
+    @media (max-width: 960px) {
+      /* Sections with unhandled wide padding */
+      .whatif { padding: 56px 24px; }
+      .compare-section { padding: 56px 24px; }
+      .proof-inner { padding: 56px 24px; }
+      .survey-section { padding: 56px 24px; }
+      .final { padding: 64px 24px; }
+      footer { padding: 48px 24px 24px; }
+      .sim-inner { padding: 64px 24px; }
+      .ai-section { padding: 64px 24px; }
+
+      /* Onboarding demo */
+      .ob-body { padding: 24px; }
+      .ob-steps-nav { flex-wrap: wrap; gap: 4px; }
+
+      /* Survey brand grid: 4 columns on tablet */
+      .survey-logo-grid { grid-template-columns: repeat(4, 1fr); }
+
+      /* Compare table: compact columns */
+      .compare-section { overflow-x: auto; }
+      .compare-header-row, .compare-row {
+        grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      }
+      .compare-col-head, .compare-cell, .compare-col-label {
+        padding: 12px 10px;
+        font-size: 12px;
+      }
+
+      /* Footer: single column on small screens */
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+
+      /* Stats grid: 2 columns */
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
     /* ─────────── HERO EYEBROW RESPONSIVE ─────────── */
     @media (max-width: 480px) {
       .hero-eyebrow {
@@ -900,6 +936,49 @@
         font-size: 12px;
         padding: 6px 14px 6px 10px;
       }
+
+      /* Survey brand grid: 4 columns on phone */
+      .survey-logo-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+      .survey-logo-btn { padding: 10px 4px; font-size: 11px; border-radius: 12px; }
+      .survey-logo-btn svg { width: 26px; height: 26px; }
+
+      /* Onboarding brand grid */
+      .brand-grid { grid-template-columns: repeat(3, 1fr); }
+
+      /* Generated portfolios: stack */
+      .gen-portfolios { grid-template-columns: 1fr; }
+
+      /* Flip cards: shorter on phone */
+      .flip-card { height: auto; min-height: 360px; }
+
+      /* Comparison table: scrollable wrapper */
+      .compare-inner { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .compare-table { min-width: 540px; }
+
+      /* Footer: single column */
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+
+      /* Stats: 2 columns */
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+
+      /* Final CTA section */
+      .final h2 { letter-spacing: -1px; }
+      .final-ctas { flex-direction: column; align-items: center; }
+
+      /* Whatif cards */
+      .wc { min-width: unset; width: 100%; }
+
+      /* Survey result grid */
+      .survey-result-grid { grid-template-columns: 1fr; }
+
+      /* Proof section testimonials already 1fr at 960 */
+      /* Padding tightening */
+      .whatif { padding: 40px 16px; }
+      .compare-section { padding: 40px 16px; }
+      .proof-inner { padding: 40px 16px; }
+      .survey-section { padding: 40px 16px; }
+      .final { padding: 48px 16px; }
+      footer { padding: 40px 16px 20px; }
     }
 
     /* ─────────── MONEY VIS RESPONSIVE (must be last to beat base styles) ─────────── */
