@@ -780,6 +780,28 @@
       .brand-grid { grid-template-columns: repeat(4, 1fr); }
       .footer-grid { grid-template-columns: 1fr 1fr; }
       .whatif-cards { flex-direction: column; align-items: center; }
+
+      /* Money visualiser — tablet */
+      .money-vis-section { padding: 56px 24px; }
+      .money-vis-card { padding: 24px; }
+      .money-sliders { grid-template-columns: 1fr; gap: 24px; }
+      .money-results-row { grid-template-columns: 1fr; gap: 10px; }
+      .money-stat-strip { flex-direction: column; border-radius: 16px; }
+      .money-stat-div { width: 100%; height: 1px; flex-shrink: 0; }
+    }
+
+    @media (max-width: 480px) {
+      /* Money visualiser — phone */
+      .money-vis-section { padding: 40px 16px; }
+      .money-vis-card { padding: 18px 16px; border-radius: 16px; }
+      .money-stat-strip { border-radius: 14px; }
+      .money-stat-item { padding: 20px 16px; }
+      .money-stat-num { font-size: 28px; }
+      .money-results-row { gap: 8px; }
+      .money-result-cell { padding: 12px; }
+      .money-result-val { font-size: 18px; }
+      .money-loss-banner { font-size: 13px; padding: 12px 14px; }
+      .money-chart-legend { gap: 12px; }
     }
     .tip { font-size: 10px; color: var(--text-faint); cursor: help; vertical-align: middle; }
     .filter-pill { text-transform: none; }
